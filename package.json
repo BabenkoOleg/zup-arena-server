@@ -12,7 +12,10 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "npm run watch-node",
+    "clean": "rm -rf dist && mkdir dist",
+    "build-babel": "babel -d ./dist ./src -s",
+    "build": "npm run clean && npm run build-babel",
+    "start": "npm run build && node ./dist/server.js",
     "watch-node": "nodemon --exec babel-node src/server.js",
     "eslint": "eslint",
     "watch-eslint": "node node_modules/eslint-watch/bin/esw -w",
