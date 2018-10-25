@@ -8,7 +8,7 @@ mongoose.Promise = bluebird;
 mongoose.set('useCreateIndex', true);
 mongoose.set('debug', true);
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
-  .then(() => logger.debug('MongoDB connection established'))
+  .then(() => logger.info('MongoDB connection established'))
   .catch(error => logger.error(`MongoDB connection error: ${error}`));
 
 const app = express();
