@@ -16,7 +16,7 @@ const app = express();
 
 app.use(errorHandler());
 
-app.set('port', 3000);
+app.set('port', process.env.PORT || 3000);
 
 app.get('/', (req, res) => {
   res.send('Hello World!!');
