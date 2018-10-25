@@ -1,4 +1,5 @@
 import bluebird from 'bluebird';
+import errorHandler from 'errorhandler';
 import express from 'express';
 import mongoose from 'mongoose';
 import logger from './util/logger';
@@ -12,6 +13,8 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
   .catch(error => logger.error(`MongoDB connection error: ${error}`));
 
 const app = express();
+
+app.use(errorHandler());
 
 app.set('port', 3000);
 
