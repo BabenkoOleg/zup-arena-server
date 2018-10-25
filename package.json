@@ -12,7 +12,11 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --exec babel-node src/server.js"
+    "start": "npm run watch-node",
+    "watch-node": "nodemon --exec babel-node src/server.js",
+    "eslint": "eslint",
+    "watch-eslint": "node node_modules/eslint-watch/bin/esw -w",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"EsLint,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-eslint\" \"npm run watch-node\""
   },
   "dependencies": {
     "express": "^4.16.4",
@@ -23,8 +27,10 @@
     "@babel/core": "^7.1.2",
     "@babel/node": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "concurrently": "^4.0.1",
     "eslint": "^5.7.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-watch": "^4.0.2"
   }
 }
