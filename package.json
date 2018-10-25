@@ -10,5 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/BabenkoOleg/zup-arena-server.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0"
+  }
 }
