@@ -1,0 +1,14 @@
+{
+  "name": "zup-arena-server",
+  "version": "0.0.1",
+  "description": "The game server for Zup! Arena",
+  "author": {
+    "name": "Oleg Babenko",
+    "email": "majerkravchuk@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BabenkoOleg/zup-arena-server.git"
+  },
+  "license": "MIT"
+}
