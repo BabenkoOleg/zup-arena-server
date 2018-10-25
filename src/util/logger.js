@@ -1,15 +1,16 @@
-import * as logger from 'winston';
+import winston from 'winston';
 
-logger.configure({
-  format: logger.format.combine(
-    logger.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    logger.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`),
+const logger = winston.createLogger({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: winston.format.combine(
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`),
   ),
   transports: [
-    new (logger.transports.Console)({
+    new winston.transports.Console({
       level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
     }),
-    new (logger.transports.File)({ filename: 'debug.log' }),
+    new winston.transports.File({ filename: 'debug.log' }),
   ],
 });
 
