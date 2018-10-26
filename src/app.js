@@ -2,6 +2,7 @@ const bluebird = require('bluebird');
 const errorHandler = require('errorhandler');
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const logger = require('./util/logger');
 const secrets = require('./util/secrets');
 
@@ -15,6 +16,9 @@ mongoose.connect(secrets.MONGODB_URI, { useNewUrlParser: true })
 const app = express();
 
 app.use(errorHandler());
+app.use(morgan(':method :url HTTP/:http-version :status - :response-time ms', {
+  stream: logger.stream,
+}));
 
 app.set('port', process.env.PORT || 3000);
 
