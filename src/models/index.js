@@ -1,14 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const logger = require('../util/logger');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(`${__dirname}/../config/database.json`)[env];
 const db = {};
 
-let sequelize;
+const config = require(`${__dirname}/../config/database.js`)[env];
+config.logging = message => logger.info(message);
 
+let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
@@ -26,7 +28,10 @@ Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) db[modelName].associate(db);
 });
 
+sequelize.authenticate()
+  .then(() => logger.info('PostgreSQL connection established'))
+  .catch(error => logger.error('Unable to connect to the database: ', error));
+
 db.sequelize = sequelize;
-db.Sequelize = Sequelize;
 
 module.exports = db;

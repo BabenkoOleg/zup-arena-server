@@ -11,6 +11,3 @@ if (fs.existsSync('.env')) {
 }
 
 module.exports.ENVIRONMENT = process.env.NODE_ENV;
-
-const prod = process.env.NODE_ENV === 'production';
-module.exports.MONGODB_URI = prod ? process.env.MONGODB_URI : process.env.MONGODB_URI_LOCAL;

@@ -3,8 +3,6 @@ const express = require('express');
 const morgan = require('morgan');
 const logger = require('./util/logger');
 
-require('./db');
-
 const app = express();
 
 app.use(errorHandler());
