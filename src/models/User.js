@@ -1,13 +1,11 @@
-import mongoose from 'mongoose';
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    level: { type: DataTypes.INTEGER, defaultValue: 0 },
+    money: { type: DataTypes.INTEGER, defaultValue: 0 },
+    rank: { type: DataTypes.INTEGER, defaultValue: 0 },
+    steamId: { type: DataTypes.STRING, unique: true },
+    xp: { type: DataTypes.INTEGER, defaultValue: 0 },
+  }, {});
 
-const userSchema = new mongoose.Schema({
-  level: { type: Number, default: 0 },
-  money: { type: Number, default: 0 },
-  rank: { type: Number, default: 0 },
-  steamId: { type: String, unique: true },
-  xp: { type: Number, default: 0 },
-});
-
-const User = mongoose.model('User', userSchema);
-
-export default User;
+  return User;
+};
