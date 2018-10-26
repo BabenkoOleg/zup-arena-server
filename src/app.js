@@ -2,22 +2,23 @@ const errorHandler = require('errorhandler');
 const express = require('express');
 const morgan = require('morgan');
 const logger = require('./util/logger');
-
-const { User } = require('./models/index');
+const Router = require('./router');
 
 const app = express();
+const router = new Router(app);
 
 app.use(errorHandler());
-app.use(morgan(':method :url HTTP/:http-version :status - :response-time ms', {
+app.use(morgan('Started :method ":url" for :remote-addr at :date[iso]', {
+  immediate: true,
   stream: logger.stream,
 }));
 
-app.set('port', process.env.PORT || 3000);
+app.use(morgan('Completed :method ":url" for :remote-addr in :response-time ms', {
+  stream: logger.stream,
+}));
 
-app.get('/', (req, res) => {
-  User.count().then((c) => {
-    res.send(`There are ${c} users!`);
-  });
-});
+router.loadRoutes();
+
+app.set('port', process.env.PORT || 3000);
 
 module.exports = app;
