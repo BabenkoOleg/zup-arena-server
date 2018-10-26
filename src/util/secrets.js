@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import fs from 'fs';
-import logger from './logger';
+const dotenv = require('dotenv');
+const fs = require('fs');
+const logger = require('./logger');
 
 if (fs.existsSync('.env')) {
   logger.debug('Using .env file to supply config environment variables');
@@ -10,8 +10,7 @@ if (fs.existsSync('.env')) {
   dotenv.config({ path: '.env.example' });
 }
 
-const ENVIRONMENT = process.env.NODE_ENV;
-export default ENVIRONMENT;
+module.exports.ENVIRONMENT = process.env.NODE_ENV;
 
-const prod = ENVIRONMENT === 'production';
-export const MONGODB_URI = prod ? process.env.MONGODB_URI : process.env.MONGODB_URI_LOCAL;
+const prod = process.env.NODE_ENV === 'production';
+module.exports.MONGODB_URI = prod ? process.env.MONGODB_URI : process.env.MONGODB_URI_LOCAL;

@@ -1,14 +1,14 @@
-import bluebird from 'bluebird';
-import errorHandler from 'errorhandler';
-import express from 'express';
-import mongoose from 'mongoose';
-import logger from './util/logger';
-import { MONGODB_URI } from './util/secrets';
+const bluebird = require('bluebird');
+const errorHandler = require('errorhandler');
+const express = require('express');
+const mongoose = require('mongoose');
+const logger = require('./util/logger');
+const secrets = require('./util/secrets');
 
 mongoose.Promise = bluebird;
 mongoose.set('useCreateIndex', true);
 mongoose.set('debug', true);
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(secrets.MONGODB_URI, { useNewUrlParser: true })
   .then(() => logger.info('MongoDB connection established'))
   .catch(error => logger.error(`MongoDB connection error: ${error}`));
 
@@ -22,4 +22,4 @@ app.get('/', (req, res) => {
   res.send('Hello World!!');
 });
 
-export default app;
+module.exports = app;

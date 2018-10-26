@@ -1,7 +1,7 @@
-import * as http from 'http';
-import * as WebSocket from 'ws';
-import app from './app';
-import logger from './util/logger';
+const http = require('http');
+const WebSocket = require('ws');
+const app = require('./app');
+const logger = require('./util/logger');
 
 const server = http.createServer(app);
 
@@ -14,5 +14,3 @@ wss.on('connection', (ws) => {
 server.listen(app.get('port'), () => {
   logger.info(`App is running at http://localhost:${app.get('port')} in ${app.get('env')} mode`);
 });
-
-export default server;
