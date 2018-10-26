@@ -3,6 +3,8 @@ const express = require('express');
 const morgan = require('morgan');
 const logger = require('./util/logger');
 
+const { User } = require('./models/index');
+
 const app = express();
 
 app.use(errorHandler());
@@ -13,7 +15,9 @@ app.use(morgan(':method :url HTTP/:http-version :status - :response-time ms', {
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', (req, res) => {
-  res.send('Hello World!!');
+  User.count().then((c) => {
+    res.send(`There are ${c} users!`);
+  });
 });
 
 module.exports = app;
