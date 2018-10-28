@@ -1,14 +1,24 @@
-const WebSocket = require('ws');
+const socket = require('socket.io');
 const logger = require('../util/logger');
 
-class WebSocketServer extends WebSocket.Server {
+const onAuthenticationHandler = require('./eventHandlers/authentication');
+
+class WebSocketServer {
   constructor(server) {
-    super({ server });
+    this.server = server;
   }
 
   run() {
-    this.on('connection', (ws) => {
-      ws.send('Hi there, I am a WebSocket server');
+    const io = socket(this.server);
+    io.origins('*:*');
+    io.on('connection', (client) => {
+      logger.debug('user connected');
+
+      client.on('authentication', onAuthenticationHandler(io, client));
+
+      client.on('disconnect', () => {
+        logger.debug('user disconnected');
+      });
     });
 
     logger.info('WebSocketServer is running');
