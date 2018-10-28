@@ -30,10 +30,11 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.41.0",
     "sequelize-cli": "^5.2.0",
+    "serve-static": "^1.13.2",
+    "socket.io": "^2.1.1",
     "steam-web-api2": "^2.0.3",
     "uuid": "^3.3.2",
-    "winston": "^3.1.0",
-    "ws": "^6.1.0"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
