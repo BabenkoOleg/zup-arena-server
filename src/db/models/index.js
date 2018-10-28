@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const logger = require('../util/logger');
+const logger = require('../../util/logger');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const db = {};
 
-const config = require(`${__dirname}/../config/database.js`)[env];
+const config = require(`${__dirname}/../database.js`)[env];
 config.logging = message => logger.info(message);
 
 let sequelize;
