@@ -6,6 +6,14 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
+    uuid: {
+      type: Sequelize.STRING,
+      unique: true,
+    },
+    steamId: {
+      type: Sequelize.STRING,
+      unique: true,
+    },
     level: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
@@ -17,10 +25,6 @@ module.exports = {
     rank: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
-    },
-    steamId: {
-      type: Sequelize.STRING,
-      unique: true,
     },
     xp: {
       type: Sequelize.INTEGER,

@@ -35,7 +35,6 @@ class ApiServer {
     this.server.listen(app.get('port'), () => {
       logger.info(`ApiServer is running at http://localhost:${app.get('port')} in ${app.get('env')} mode`);
     });
-    logger.info(`!`);
   }
 }
 
