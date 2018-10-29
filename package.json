@@ -12,8 +12,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "node src/main.js",
-    "watch-node": "nodemon src/main.js",
+    "start": "node src/server.js",
+    "watch-node": "nodemon src/server.js",
     "eslint": "eslint",
     "watch-eslint": "node node_modules/eslint-watch/bin/esw -w",
     "watch": "concurrently -k -p \"[{name}]\" -n \"EsLint,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-eslint\" \"npm run watch-node\""
@@ -30,8 +30,6 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.41.0",
     "sequelize-cli": "^5.2.0",
-    "serve-static": "^1.13.2",
-    "socket.io": "^2.1.1",
     "steam-web-api2": "^2.0.3",
     "uuid": "^3.3.2",
     "winston": "^3.1.0"
