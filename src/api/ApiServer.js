@@ -22,7 +22,7 @@ class ApiServer {
       stream: logger.stream,
     }));
 
-    app.use(morgan('Completed :method ":url" for :remote-addr in :response-time ms', {
+    app.use(morgan('Completed :status :method ":url" for :remote-addr in :response-time ms', {
       stream: logger.stream,
     }));
 
