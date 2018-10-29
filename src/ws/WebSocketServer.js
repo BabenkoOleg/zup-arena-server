@@ -12,6 +12,7 @@ class WebSocketServer {
     const io = socket(this.server);
     io.origins('*:*');
     io.on('connection', (client) => {
+      client.authenticated = false;
       logger.debug('user connected');
 
       client.on('authentication', onAuthenticationHandler(io, client));

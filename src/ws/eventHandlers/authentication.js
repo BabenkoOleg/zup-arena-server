@@ -10,6 +10,7 @@ const handler = (io, client) => (message) => {
       User.findOne({ where: { steamId: decoded.steamId } })
         .then((record) => {
           if (record) {
+            client.authenticated = true;
             client.emit('authenticated', {
               success: true,
               message: 'Successfully authorized',
