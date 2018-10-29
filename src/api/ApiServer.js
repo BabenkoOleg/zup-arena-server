@@ -17,6 +17,11 @@ class ApiServer {
     app.use(errorHandler());
     app.use(bodyParser.json());
 
+    app.use((req, res, next) => {
+      req.ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      next();
+    });
+
     app.use(morgan('Started :method ":url" for :remote-addr at :date[iso]', {
       immediate: true,
       stream: logger.stream,
