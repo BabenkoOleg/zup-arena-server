@@ -1,14 +1,15 @@
 const winston = require('winston');
 
+const level = process.env.LOG_LEVEL || 'debug';
+
 const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`),
+    winston.format.printf(i => `${i.timestamp} ${i.level[0].toUpperCase()}: ${i.message}`),
   ),
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  level,
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'debug.log' }),
   ],
 });
 
@@ -18,8 +19,6 @@ logger.stream = {
   },
 };
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.debug('Logging initialized at debug level');
-}
+logger.info(`Logging initialized at ${level} level`);
 
 module.exports = logger;
