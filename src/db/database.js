@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+require('../util/env').loadVariables();
 
 module.exports = {
   development: {
