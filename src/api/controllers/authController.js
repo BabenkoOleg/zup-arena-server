@@ -1,10 +1,8 @@
 const jwt = require('jsonwebtoken');
 const SteamService = require('../../services/Steam');
 const { User } = require('../../db/models');
-const logger = require('../../util/logger');
 
 module.exports.create = (req, res) => {
-  logger.info(req.body);
   if (req.body.ticket) {
     SteamService.ISteamUserAuth.AuthenticateUserTicket({
       appid: process.env.STEAM_APP_ID,
@@ -16,7 +14,9 @@ module.exports.create = (req, res) => {
             const token = jwt.sign({
               steamId: record.steamId,
               uuid: record.uuid,
-            }, process.env.JWT_SECRET);
+            }, process.env.JWT_SECRET, {
+              expiresIn: '1h',
+            });
             res.json({ success: true, jwt: token });
           });
       })

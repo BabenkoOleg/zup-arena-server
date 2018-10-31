@@ -1,9 +1,8 @@
 const errorHandler = require('errorhandler');
 const express = require('express');
 const bodyParser = require('body-parser');
-const logger = require('./util/logger');
-const routes = require('./api/routes');
 const Env = require('./util/env');
+const logger = require('./util/logger');
 const { requestLogger, responseLogger } = require('./util/morgan');
 
 Env.loadVariables();
@@ -15,6 +14,8 @@ server.use(bodyParser.json());
 server.use(requestLogger);
 server.use(responseLogger);
 server.set('port', process.env.PORT || 3000);
+
+const routes = require('./api/routes');
 
 routes.forEach(config => server.use(config.path, config.router));
 
