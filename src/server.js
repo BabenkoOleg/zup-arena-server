@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Env = require('./util/env');
 const logger = require('./util/logger');
+const authenticate = require('./api/middlewares/authenticate');
 const { requestLogger, responseLogger } = require('./util/morgan');
 
 Env.loadVariables();
@@ -12,6 +13,7 @@ const server = express();
 server.use(errorHandler());
 server.use(bodyParser.json());
 server.use(requestLogger);
+server.use(authenticate);
 server.use(responseLogger);
 server.set('port', process.env.PORT || 3000);
 
