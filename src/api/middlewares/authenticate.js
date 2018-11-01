@@ -7,13 +7,11 @@ const extractJwt = (row) => {
   return result ? result[1] : null;
 };
 
-const extractCurrentUser = (uuid) => {
-  User.findOne({ where: { uuid } })
-    .then((record) => {
-      if (!record) return Promise.reject(new Error(`User with uuid ${uuid} found`));
-      return Promise.resolve(record);
-    });
-};
+const extractCurrentUser = uuid => User.findOne({ where: { uuid } })
+  .then((record) => {
+    if (!record) return Promise.reject(new Error(`User with uuid ${uuid} found`));
+    return Promise.resolve(record);
+  });
 
 const renderError = (response, error) => {
   response.status(401);
