@@ -9,6 +9,7 @@ module.exports.show = (request, response) => {
       money: currentUser.money,
       rank: currentUser.rank,
       xp: currentUser.xp,
+      availableNewLootboxes: currentUser.availableNewLootboxes,
     },
   });
 };

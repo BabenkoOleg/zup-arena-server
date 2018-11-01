@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     money: { type: DataTypes.INTEGER, defaultValue: 0 },
     rank: { type: DataTypes.INTEGER, defaultValue: 0 },
     xp: { type: DataTypes.INTEGER, defaultValue: 0 },
+    availableNewLootboxes: { type: DataTypes.INTEGER, defaultValue: 0 },
   }, {});
 
   User.beforeCreate((user) => {
