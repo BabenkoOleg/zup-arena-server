@@ -3,7 +3,6 @@ module.exports = {
     name: 'API',
     script: 'src/server.js',
     instances: 1,
-    interpreter: 'node@11.0.0',
     autorestart: true,
     watch: false,
     max_memory_restart: '1G',
