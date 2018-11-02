@@ -1,6 +1,6 @@
 {
   "name": "zup-arena-server",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "The game server for Zup! Arena",
   "author": {
     "name": "Oleg Babenko",
@@ -11,6 +11,14 @@
     "url": "git+https://github.com/BabenkoOleg/zup-arena-server.git"
   },
   "license": "MIT",
+  "apidoc": {
+    "name": "Zup! Arena Server API",
+    "title": "Zup! Arena | Documentation",
+    "url" : "http://5.200.53.101",
+    "template": {
+      "forceLanguage": "en"
+    }
+  },
   "scripts": {
     "start": "node src/server.js",
     "watch-node": "nodemon src/server.js",

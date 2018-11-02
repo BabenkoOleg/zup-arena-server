@@ -19,7 +19,7 @@ const renderError = (response, error) => {
 };
 
 module.exports = (request, response, next) => {
-  if (request.path !== '/api/auth') {
+  if (request.path !== '/api/auth' && !request.path.includes('/apidoc')) {
     const jwtHeader = request.get('Authorization');
     if (!jwtHeader) return renderError(response, 'Token not provided');
 
