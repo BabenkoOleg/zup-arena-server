@@ -35,6 +35,11 @@
  *        "availableNewLootboxes": 0
  *     }
  *   }
+ *
+ * @apiUse TokenNotProvidedError
+ * @apiUse InvalidTokenError
+ * @apiUse TokenExpiredError
+ * @apiUse UserNotFoundError
  */
 
 module.exports.show = (request, response) => {
