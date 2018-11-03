@@ -98,7 +98,7 @@ const renderUserNotFoundError = (response, id) => {
 };
 
 module.exports = (request, response, next) => {
-  if (!request.path.includes('/api/auth') && !request.path.includes('/apidoc')) {
+  if (!request.path.includes('/api/auth') && !request.path.includes('/api/docs')) {
     const jwtHeader = request.get('Authorization');
     if (!jwtHeader) return renderTokenNotProvidedError(response);
 
