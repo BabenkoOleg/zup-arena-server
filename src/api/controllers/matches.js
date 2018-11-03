@@ -87,7 +87,7 @@ module.exports.create = (request, response) => {
 };
 
 /**
- * @api {post} /api/:id/matches Request start Match
+ * @api {post} /api/matches/:id/start Request start Match
  * @apiName StartMatch
  * @apiVersion 0.1.0
  * @apiGroup Match
