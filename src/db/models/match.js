@@ -20,9 +20,15 @@ module.exports = (sequelize, DataTypes) => {
 
   Match.associate = (models) => {
     Match.belongsToMany(models.User, {
+      as: 'users',
       foreignKey: 'userId',
+      required: false,
       through: 'UserMatch',
       timestamps: false,
+    });
+
+    Match.belongsTo(models.User, {
+      foreignKey: 'createdBy',
     });
   };
 

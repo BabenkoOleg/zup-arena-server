@@ -17,6 +17,14 @@ module.exports = {
     finishedAt: {
       type: Sequelize.DATE,
     },
+    createdBy: {
+      allowNull: false,
+      type: Sequelize.UUID,
+      references: {
+        model: 'Users',
+        key: 'id',
+      },
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,

@@ -2,7 +2,7 @@ const express = require('express');
 
 const authController = require('../controllers/auth');
 const profileController = require('../controllers/profile');
-
+const matchesController = require('../controllers/matches');
 
 const authRouter = express.Router();
 authRouter.post('/', authController.create);
@@ -14,6 +14,9 @@ if (process.env.NODE_ENV === 'development') {
 const profileRouter = express.Router();
 profileRouter.get('/', profileController.show);
 
+const matchesRouter = express.Router();
+matchesRouter.post('/', matchesController.create);
+
 module.exports = [
   {
     path: '/api/auth',
@@ -21,5 +24,8 @@ module.exports = [
   }, {
     path: '/api/profile',
     router: profileRouter,
+  }, {
+    path: '/api/matches',
+    router: matchesRouter,
   },
 ];
