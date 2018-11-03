@@ -1,4 +1,4 @@
-const { Match } = require('../../db/models');
+const { User, Match, Sequelize } = require('../../db/models');
 
 const isMatchIdValid = (matchId) => {
   const re = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
@@ -51,6 +51,27 @@ const renderMatchNotFoundError = (matchId, response) => {
 };
 
 /**
+ * @apiDefine UsersListNotProvidedError
+ *
+ * @apiError UsersListNotProvidedError List of user's steamIds not provided
+ *
+ * @apiErrorExample UsersListNotProvidedError:
+ *   HTTP/1.1 422 Unprocessable Entity
+ *   {
+ *     "success": false,
+ *     "error": "Users list not provided"
+ *   }
+ */
+
+const renderUsersListNotProvidedError = (response) => {
+  response.status(422);
+  response.json({
+    success: false,
+    error: 'Users list not provided',
+  });
+};
+
+/**
  * @api {post} /api/matches Request create Match
  * @apiName CreateMatch
  * @apiVersion 0.1.0
@@ -82,6 +103,7 @@ const renderMatchNotFoundError = (matchId, response) => {
  *        }
  *    }
  *
+ * @apiUse UsersListNotProvidedError
  * @apiUse TokenNotProvidedError
  * @apiUse InvalidTokenError
  * @apiUse TokenExpiredError
@@ -90,9 +112,19 @@ const renderMatchNotFoundError = (matchId, response) => {
 
 module.exports.create = (request, response) => {
   const { currentUser } = request;
+
+  if (!request.body.users || !Array.isArray(request.body.users)) {
+    return renderUsersListNotProvidedError(response);
+  }
+
+  const { Op } = Sequelize;
+
   Match.create({ createdBy: currentUser.id })
     .then((record) => {
-      record.addUser(currentUser).then(() => renderMatchWithUsers(record, response));
+      User.findAll({ where: { steamId: { [Op.in]: request.body.users } } })
+        .then((users) => {
+          record.addUsers(users).then(() => renderMatchWithUsers(record, response));
+        });
     });
 };
 

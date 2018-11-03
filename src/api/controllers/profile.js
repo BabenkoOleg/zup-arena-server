@@ -14,7 +14,7 @@
  * @apiSuccess {Boolean} success Successful execution of the request
  * @apiSuccess {Object} data User information
  * @apiSuccess {String} data.id Unique user ID
- * @apiSuccess {Number} data.steamId ID in the Steam system
+ * @apiSuccess {String} data.steamId ID in the Steam system
  * @apiSuccess {Number} data.level Current level
  * @apiSuccess {Number} data.money Amount of game currency
  * @apiSuccess {Number} data.rank Current rank
@@ -27,7 +27,7 @@
  *     "success": true,
  *     "data": {
  *        "id": "93df2547-e8b8-46fa-83ef-51dd799f87e5",
- *        "steamId": 12345678901234567,
+ *        "steamId": "12345678901234567",
  *        "level": 0,
  *        "money": 0,
  *        "rank": 0,

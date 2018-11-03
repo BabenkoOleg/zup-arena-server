@@ -41,6 +41,7 @@ sequelize.authenticate()
   })
   .catch(error => logger.error('Unable to connect to the database: ', error));
 
+db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 module.exports = db;
