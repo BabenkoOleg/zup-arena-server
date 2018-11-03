@@ -84,6 +84,11 @@ const renderUsersListNotProvidedError = (response) => {
  *     "Authorization": "Bearer xxx.zzz.yyy"
  *   }
  *
+ * @apiParam {Array} users List of user's steamIds
+ *
+ * @apiParamExample {json} Request-Example:
+ *                { "users": ["12345678901234567", "12345678901234568", "12345678901234569"] }
+ *
  * @apiSuccess {Boolean} success Successful execution of the request
  * @apiSuccess {Object} data Match information
  * @apiSuccess {String} data.id Unique match ID
@@ -98,7 +103,9 @@ const renderUsersListNotProvidedError = (response) => {
  *            "id": "ed3e03c3-954c-4744-9556-579caf90de05",
  *            "state": "active",
  *            "users": [
- *                "12345678901234567"
+ *                "12345678901234567",
+ *                "12345678901234568",
+ *                "12345678901234569"
  *            ]
  *        }
  *    }
