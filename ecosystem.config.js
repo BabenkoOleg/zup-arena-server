@@ -13,30 +13,16 @@ module.exports = {
       PORT: 3000,
       NODE_ENV: 'production',
     },
-    env_staging: {
-      PORT: 3001,
-      NODE_ENV: 'production',
-    },
   }],
-
   deploy: {
     production: {
       user: 'deploy',
       host: '5.200.53.101',
       ref: 'origin/master',
       repo: 'git@github.com:BabenkoOleg/zup-arena-server.git',
-      path: '/home/deploy/zup-arena-server-production',
+      path: '/home/deploy/zup-arena-server',
       ssh_options: ['ForwardAgent=yes'],
       'post-deploy': 'npm install && cp ~/.env-production .env && pm2 reload ecosystem.config.js --env production',
-    },
-    staging: {
-      user: 'deploy',
-      host: '5.200.53.101',
-      ref: 'origin/master',
-      repo: 'git@github.com:BabenkoOleg/zup-arena-server.git',
-      path: '/home/deploy/zup-arena-server-staging',
-      ssh_options: ['ForwardAgent=yes'],
-      'post-deploy': 'npm install && cp ~/.env-staging .env && pm2 reload ecosystem.config.js --env staging',
     },
   },
 };
