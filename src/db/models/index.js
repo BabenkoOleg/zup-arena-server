@@ -33,13 +33,11 @@ sequelize.authenticate()
   .then(() => {
     logger.info('PostgreSQL connection established');
 
-    if (process.env.NODE_ENV !== 'production') {
-      db.User
-        .findOrCreate({ where: { steamId: '00000000000000000' } })
-        .spread((record) => {
-          logger.info(`Test user with uuid ${record.id} updated`);
-        });
-    }
+    db.User
+      .findOrCreate({ where: { steamId: '00000000000000000' } })
+      .spread((record) => {
+        logger.info(`Test user with uuid ${record.id} updated`);
+      });
   })
   .catch(error => logger.error('Unable to connect to the database: ', error));
 

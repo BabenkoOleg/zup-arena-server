@@ -6,10 +6,7 @@ const matchesController = require('../controllers/matches');
 
 const authRouter = express.Router();
 authRouter.post('/', authController.create);
-
-if (process.env.NODE_ENV === 'development') {
-  authRouter.get('/test-user', authController.testUser);
-}
+authRouter.get('/test-user', authController.testUser);
 
 const profileRouter = express.Router();
 profileRouter.get('/', profileController.show);

@@ -93,17 +93,15 @@ module.exports.create = (request, response) => {
     .catch(error => renderInvalidTicketError(response, error));
 };
 
-if (process.env.NODE_ENV === 'development') {
-  module.exports.testUser = (request, response) => {
-    User.findOne({ where: { steamId: '00000000000000000' } })
-      .then((record) => {
-        const token = jwt.sign({
-          steamId: record.steamId,
-          id: record.id,
-        }, process.env.JWT_SECRET, {
-          expiresIn: '7d',
-        });
-        response.json({ success: true, jwt: token });
+module.exports.testUser = (request, response) => {
+  User.findOne({ where: { steamId: '00000000000000000' } })
+    .then((record) => {
+      const token = jwt.sign({
+        steamId: record.steamId,
+        id: record.id,
+      }, process.env.JWT_SECRET, {
+        expiresIn: '7d',
       });
-  };
-}
+      response.json({ success: true, jwt: token });
+    });
+};
