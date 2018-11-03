@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
     finishedAt: {
       type: DataTypes.DATE,
     },
+    createdById: {
+      allowNull: false,
+      type: DataTypes.UUID,
+      references: {
+        model: 'Users',
+        key: 'id',
+      },
+    },
   }, {});
 
   Match.associate = (models) => {
@@ -25,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Match.belongsTo(models.User, {
-      foreignKey: 'createdBy',
+      foreignKey: 'createdById',
     });
   };
 

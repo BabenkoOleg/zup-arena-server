@@ -30,6 +30,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    activeMatchId: {
+      allowNull: true,
+      type: DataTypes.UUID,
+      references: {
+        model: 'Matches',
+        key: 'id',
+      },
+    },
   }, {});
 
   User.associate = (models) => {

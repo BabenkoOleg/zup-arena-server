@@ -14,7 +14,7 @@ module.exports = {
     finishedAt: {
       type: Sequelize.DATE,
     },
-    createdBy: {
+    createdById: {
       allowNull: false,
       type: Sequelize.UUID,
       references: {

@@ -87,7 +87,7 @@ const renderUsersListNotProvidedError = (response) => {
  * @apiParam {Array} users List of user's steamIds
  *
  * @apiParamExample {json} Request-Example:
- *                { "users": ["12345678901234567", "12345678901234568", "12345678901234569"] }
+ *                  { "users": ["12345678901234567", "12345678901234568", "12345678901234569"] }
  *
  * @apiSuccess {Boolean} success Successful execution of the request
  * @apiSuccess {Object} data Match information
@@ -126,7 +126,7 @@ module.exports.create = (request, response) => {
 
   const { Op } = Sequelize;
 
-  Match.create({ createdBy: currentUser.id })
+  Match.create({ createdById: currentUser.id })
     .then((record) => {
       User.findAll({ where: { steamId: { [Op.in]: request.body.users } } })
         .then((users) => {
