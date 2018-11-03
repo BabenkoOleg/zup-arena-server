@@ -13,7 +13,7 @@ profileRouter.get('/', profileController.show);
 
 const matchesRouter = express.Router();
 matchesRouter.post('/', matchesController.create);
-matchesRouter.post('/:id/start', matchesController.start);
+matchesRouter.post('/:id/finish', matchesController.finish);
 
 module.exports = [
   {

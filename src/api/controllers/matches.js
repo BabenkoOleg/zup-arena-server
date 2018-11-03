@@ -5,8 +5,18 @@ const isMatchIdValid = (matchId) => {
   return re.test(matchId);
 };
 
+const renderMatch = (match, response) => {
+  response.json({
+    success: true,
+    data: {
+      id: match.id,
+      state: match.state,
+    },
+  });
+};
+
 const renderMatchWithUsers = (match, response) => {
-  match.getUsers({ attributes: ['steamId'], nested: false })
+  match.getUsers({ attributes: ['steamId'] })
     .then((users) => {
       response.json({
         success: true,
@@ -65,7 +75,7 @@ const renderMatchNotFoundError = (matchId, response) => {
  *        "success": true,
  *        "data": {
  *            "id": "ed3e03c3-954c-4744-9556-579caf90de05",
- *            "state": "pending",
+ *            "state": "active",
  *            "users": [
  *                "12345678901234567"
  *            ]
@@ -87,8 +97,8 @@ module.exports.create = (request, response) => {
 };
 
 /**
- * @api {post} /api/matches/:id/start Request start Match
- * @apiName StartMatch
+ * @api {post} /api/matches/:id/finish Request finish Match
+ * @apiName FinishMatch
  * @apiVersion 0.1.0
  * @apiGroup Match
  *
@@ -103,7 +113,6 @@ module.exports.create = (request, response) => {
  * @apiSuccess {Object} data Match information
  * @apiSuccess {String} data.id Unique match ID
  * @apiSuccess {Number} data.state State of match
- * @apiSuccess {Array} data.users Array of users
  *
  * @apiSuccessExample Success-Response:
  *   HTTP/1.1 200 OK
@@ -111,12 +120,7 @@ module.exports.create = (request, response) => {
  *        "success": true,
  *        "data": {
  *            "id": "ed3e03c3-954c-4744-9556-579caf90de05",
- *            "state": "pending",
- *            "users": [
- *                "12345678901234567",
- *                "12345678901234568",
- *                "12345678901234569",
- *            ]
+ *            "state": "finished"
  *        }
  *    }
  *
@@ -127,7 +131,7 @@ module.exports.create = (request, response) => {
  * @apiUse UserNotFoundError
  */
 
-module.exports.start = (request, response) => {
+module.exports.finish = (request, response) => {
   if (!isMatchIdValid(request.params.id)) {
     return renderMatchNotFoundError(request.params.id, response);
   }
@@ -136,7 +140,7 @@ module.exports.start = (request, response) => {
     .then((record) => {
       if (!record) return renderMatchNotFoundError(request.params.id, response);
 
-      record.update({ state: 'active' })
-        .then(updatedRecord => renderMatchWithUsers(updatedRecord, response));
+      record.update({ state: 'finished' })
+        .then(updatedRecord => renderMatch(updatedRecord, response));
     });
 };

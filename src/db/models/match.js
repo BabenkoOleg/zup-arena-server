@@ -7,11 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
     },
     state: {
-      type: DataTypes.ENUM('pending', 'active', 'finished'),
-      defaultValue: 'pending',
-    },
-    startedAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.ENUM('active', 'finished'),
+      defaultValue: 'active',
     },
     finishedAt: {
       type: DataTypes.DATE,

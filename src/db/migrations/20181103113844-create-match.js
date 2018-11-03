@@ -8,11 +8,8 @@ module.exports = {
     },
     state: {
       type: Sequelize.ENUM,
-      values: ['pending', 'active', 'finished'],
-      defaultValue: 'pending',
-    },
-    startedAt: {
-      type: Sequelize.DATE,
+      values: ['active', 'finished'],
+      defaultValue: 'active',
     },
     finishedAt: {
       type: Sequelize.DATE,
