@@ -10,7 +10,7 @@ module.exports = {
     operatorsAliases: Sequelize.Op,
   },
   production: {
-    database: 'zup-arena_production',
+    database: process.env.POSTGRES_DATABASE,
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
     dialect: 'postgres',
