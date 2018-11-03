@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   User.beforeCreate((user) => {
-    user.uuid = `u-${uuidv4()}`;
+    user.uuid = uuidv4();
   });
 
   return User;

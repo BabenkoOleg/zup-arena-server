@@ -8,6 +8,7 @@ module.exports = {
     },
     uuid: {
       type: Sequelize.STRING,
+      unique: true,
     },
     state: {
       type: Sequelize.ENUM,
