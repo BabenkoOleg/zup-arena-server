@@ -25,5 +25,14 @@ module.exports = {
       ssh_options: ['ForwardAgent=yes'],
       'post-deploy': 'npm install && cp ~/.env .env && pm2 reload ecosystem.config.js --env production',
     },
+    staging: {
+      user: 'deploy',
+      host: '5.200.53.101',
+      ref: 'origin/master',
+      repo: 'git@github.com:BabenkoOleg/zup-arena-server.git',
+      path: '/home/deploy/zup-arena-server-staging',
+      ssh_options: ['ForwardAgent=yes'],
+      'post-deploy': 'npm install && cp ~/.env-staging .env-staging && pm2 reload ecosystem.config.js --env staging',
+    },
   },
 };
