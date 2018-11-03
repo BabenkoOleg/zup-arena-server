@@ -16,7 +16,7 @@ matchesRouter.post('/', matchesController.create);
 matchesRouter.post('/:id/finish', matchesController.finish);
 
 const envTestRouter = express.Router();
-envTestRouter.post('/', (request, response) => {
+envTestRouter.get('/', (request, response) => {
   response.json({
     appid: process.env.STEAM_APP_ID,
   });
