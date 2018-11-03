@@ -1,10 +1,10 @@
-const uuidv4 = require('uuid/v4');
-
 module.exports = (sequelize, DataTypes) => {
   const Match = sequelize.define('Match', {
-    uuid: {
-      type: DataTypes.STRING,
-      unique: true,
+    id: {
+      allowNull: false,
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     state: {
       type: DataTypes.ENUM('pending', 'active', 'finished'),
@@ -18,9 +18,13 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
 
-  Match.beforeCreate((match) => {
-    match.uuid = uuidv4();
-  });
+  Match.associate = (models) => {
+    Match.belongsToMany(models.User, {
+      foreignKey: 'userId',
+      through: 'UserMatch',
+      timestamps: false,
+    });
+  };
 
   return Match;
 };

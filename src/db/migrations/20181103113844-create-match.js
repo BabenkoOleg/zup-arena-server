@@ -2,13 +2,9 @@ module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Matches', {
     id: {
       allowNull: false,
-      autoIncrement: true,
+      type: Sequelize.UUID,
       primaryKey: true,
-      type: Sequelize.INTEGER,
-    },
-    uuid: {
-      type: Sequelize.STRING,
-      unique: true,
+      defaultValue: Sequelize.UUIDV4,
     },
     state: {
       type: Sequelize.ENUM,

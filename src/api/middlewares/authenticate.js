@@ -7,9 +7,9 @@ const extractJwt = (row) => {
   return result ? result[1] : null;
 };
 
-const extractCurrentUser = uuid => User.findOne({ where: { uuid } })
+const extractCurrentUser = id => User.findOne({ where: { id } })
   .then((record) => {
-    if (!record) return Promise.reject(new Error(`User with uuid ${uuid} found`));
+    if (!record) return Promise.reject(new Error(`User with id ${id} found`));
     return Promise.resolve(record);
   });
 
@@ -79,21 +79,21 @@ const renderTokenExpiredError = (response) => {
 /**
  * @apiDefine UserNotFoundError
  *
- * @apiError UserNotFoundError User with uuid from token not found
+ * @apiError UserNotFoundError User with id from token not found
  *
  * @apiErrorExample UserNotFoundError:
  *   HTTP/1.1 403 Forbidden
  *   {
  *     "success": false,
- *     "error": "User with uuid 93df2547-e8b8-46fa-83ef-51dd799f87e5 not found"
+ *     "error": "User with id 93df2547-e8b8-46fa-83ef-51dd799f87e5 not found"
  *   }
  */
 
-const renderUserNotFoundError = (response, uuid) => {
+const renderUserNotFoundError = (response, id) => {
   response.status(403);
   response.json({
     success: false,
-    error: `User with uuid ${uuid} not found`,
+    error: `User with id ${id} not found`,
   });
 };
 
@@ -108,12 +108,12 @@ module.exports = (request, response, next) => {
         return renderInvalidTokenError(response);
       }
 
-      extractCurrentUser(decoded.uuid)
+      extractCurrentUser(decoded.id)
         .then((currentUser) => {
           request.currentUser = currentUser;
           next();
         })
-        .catch(() => renderUserNotFoundError(response, decoded.uuid));
+        .catch(() => renderUserNotFoundError(response, decoded.id));
     });
   } else {
     next();

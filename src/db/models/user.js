@@ -1,10 +1,10 @@
-const uuidv4 = require('uuid/v4');
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    uuid: {
-      type: DataTypes.STRING,
-      unique: true,
+    id: {
+      allowNull: false,
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     steamId: {
       type: DataTypes.STRING,
@@ -32,9 +32,13 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
 
-  User.beforeCreate((user) => {
-    user.uuid = uuidv4();
-  });
+  User.associate = (models) => {
+    User.belongsToMany(models.Match, {
+      foreignKey: 'matchId',
+      through: 'UserMatch',
+      timestamps: false,
+    });
+  };
 
   return User;
 };

@@ -13,7 +13,7 @@
  *
  * @apiSuccess {Boolean} success Successful execution of the request
  * @apiSuccess {Object} data User information
- * @apiSuccess {String} data.uuid Unique user ID
+ * @apiSuccess {String} data.id Unique user ID
  * @apiSuccess {Number} data.steamId ID in the Steam system
  * @apiSuccess {Number} data.level Current level
  * @apiSuccess {Number} data.money Amount of game currency
@@ -26,7 +26,7 @@
  *   {
  *     "success": true,
  *     "data": {
- *        "uuid": "93df2547-e8b8-46fa-83ef-51dd799f87e5",
+ *        "id": "93df2547-e8b8-46fa-83ef-51dd799f87e5",
  *        "steamId": 12345678901234567,
  *        "level": 0,
  *        "money": 0,
@@ -47,7 +47,7 @@ module.exports.show = (request, response) => {
   response.json({
     success: true,
     data: {
-      uuid: currentUser.uuid,
+      id: currentUser.id,
       steamId: currentUser.steamId,
       level: currentUser.level,
       money: currentUser.money,

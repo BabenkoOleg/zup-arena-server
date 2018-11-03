@@ -2,13 +2,9 @@ module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
     id: {
       allowNull: false,
-      autoIncrement: true,
+      type: Sequelize.UUID,
       primaryKey: true,
-      type: Sequelize.INTEGER,
-    },
-    uuid: {
-      type: Sequelize.STRING,
-      unique: true,
+      defaultValue: Sequelize.UUIDV4,
     },
     steamId: {
       type: Sequelize.STRING,
@@ -27,6 +23,10 @@ module.exports = {
       defaultValue: 0,
     },
     xp: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    },
+    availableNewLootboxes: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
     },

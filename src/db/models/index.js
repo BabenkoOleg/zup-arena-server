@@ -37,7 +37,7 @@ sequelize.authenticate()
       db.User
         .findOrCreate({ where: { steamId: '00000000000000000' } })
         .spread((record) => {
-          logger.error(`Test user with uuid ${record.uuid} updated`);
+          logger.info(`Test user with uuid ${record.id} updated`);
         });
     }
   })

@@ -83,7 +83,7 @@ module.exports.create = (request, response) => {
         .spread((record) => {
           const token = jwt.sign({
             steamId: record.steamId,
-            uuid: record.uuid,
+            id: record.id,
           }, process.env.JWT_SECRET, {
             expiresIn: '1h',
           });
@@ -99,7 +99,7 @@ if (process.env.NODE_ENV === 'development') {
       .then((record) => {
         const token = jwt.sign({
           steamId: record.steamId,
-          uuid: record.uuid,
+          id: record.id,
         }, process.env.JWT_SECRET, {
           expiresIn: '7d',
         });

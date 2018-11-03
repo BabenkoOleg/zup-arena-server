@@ -14,7 +14,7 @@
   "apidoc": {
     "name": "Zup! Arena Server API",
     "title": "Zup! Arena | Documentation",
-    "url" : "http://5.200.53.101",
+    "url": "http://5.200.53.101",
     "template": {
       "forceLanguage": "en"
     }
@@ -39,7 +39,6 @@
     "sequelize": "^4.41.0",
     "sequelize-cli": "^5.2.0",
     "steam-web-api2": "^2.0.3",
-    "uuid": "^3.3.2",
     "winston": "^3.1.0"
   },
   "devDependencies": {
