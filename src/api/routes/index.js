@@ -17,13 +17,13 @@ matchesRouter.post('/:id/finish', matchesController.finish);
 
 module.exports = [
   {
-    path: '/api/auth',
+    path: '/auth',
     router: authRouter,
   }, {
-    path: '/api/profile',
+    path: '/profile',
     router: profileRouter,
   }, {
-    path: '/api/matches',
+    path: '/matches',
     router: matchesRouter,
   },
 ];
