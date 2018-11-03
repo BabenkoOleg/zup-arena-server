@@ -1,14 +1,14 @@
 const { Match } = require('../../db/models');
 
 const renderMatchWithUsers = (match, response) => {
-  match.getUsers({ attributes: ['id'], nested: false })
+  match.getUsers({ attributes: ['steamId'], nested: false })
     .then((users) => {
       response.json({
         success: true,
         data: {
           id: match.id,
           state: match.state,
-          users: users.map(user => user.id),
+          users: users.map(user => user.steamId),
         },
       });
     });
@@ -41,7 +41,7 @@ const renderMatchWithUsers = (match, response) => {
  *            "id": "ed3e03c3-954c-4744-9556-579caf90de05",
  *            "state": "pending",
  *            "users": [
- *                "be0f671d-0906-4fe1-ae5a-06945485f335"
+ *                "12345678901234567"
  *            ]
  *        }
  *    }
