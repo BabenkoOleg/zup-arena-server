@@ -30,7 +30,17 @@ Object.keys(db).forEach((modelName) => {
 });
 
 sequelize.authenticate()
-  .then(() => logger.info('PostgreSQL connection established'))
+  .then(() => {
+    logger.info('PostgreSQL connection established');
+
+    if (process.env.NODE_ENV !== 'production') {
+      db.User
+        .findOrCreate({ where: { steamId: '00000000000000000' } })
+        .spread((record) => {
+          logger.error(`Test user with uuid ${record.uuid} updated`);
+        });
+    }
+  })
   .catch(error => logger.error('Unable to connect to the database: ', error));
 
 db.sequelize = sequelize;
