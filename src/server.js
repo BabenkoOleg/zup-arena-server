@@ -15,7 +15,7 @@ server.use(bodyParser.json());
 server.use(requestLogger);
 server.use(authenticate);
 server.use(responseLogger);
-server.use('/api/docs', express.static('apidoc'));
+server.use('/docs', express.static('apidoc'));
 server.set('port', process.env.PORT || 3000);
 
 const routes = require('./api/routes');
