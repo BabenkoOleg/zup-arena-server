@@ -15,6 +15,13 @@ const matchesRouter = express.Router();
 matchesRouter.post('/', matchesController.create);
 matchesRouter.post('/:id/finish', matchesController.finish);
 
+const envTestRouter = express.Router();
+envTestRouter.post('/', (request, response) => {
+  response.json({
+    appid: process.env.STEAM_APP_ID,
+  });
+});
+
 module.exports = [
   {
     path: '/auth',
@@ -25,5 +32,8 @@ module.exports = [
   }, {
     path: '/matches',
     router: matchesRouter,
+  }, {
+    path: '/appid',
+    router: envTestRouter,
   },
 ];
