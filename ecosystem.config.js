@@ -8,8 +8,9 @@ module.exports = {
     max_memory_restart: '1G',
     env_production: {
       PORT: 3000,
-      STEAM_APP_ID: 914160,
       NODE_ENV: 'production',
+      STEAM_APP_ID: 914160,
+      MONGODB_DATABASE: 'zup-arena-server_production',
     },
   }, {
     name: 'API Staging',
@@ -20,8 +21,9 @@ module.exports = {
     max_memory_restart: '1G',
     env_production: {
       PORT: 3001,
-      STEAM_APP_ID: 480,
       NODE_ENV: 'production',
+      STEAM_APP_ID: 480,
+      MONGODB_DATABASE: 'zup-arena-server_staging',
     },
   }],
   deploy: {

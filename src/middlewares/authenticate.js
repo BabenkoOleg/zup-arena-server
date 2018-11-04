@@ -1,17 +1,11 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../../db/models');
+const User = require('../models/User');
 
 const extractJwt = (row) => {
   const re = new RegExp(/Bearer\s(.+)/);
   const result = re.exec(row);
   return result ? result[1] : null;
 };
-
-const extractCurrentUser = id => User.findOne({ where: { id } })
-  .then((record) => {
-    if (!record) return Promise.reject(new Error(`User with id ${id} found`));
-    return Promise.resolve(record);
-  });
 
 /**
  * @apiDefine TokenNotProvidedError
@@ -108,12 +102,14 @@ module.exports = (request, response, next) => {
         return renderInvalidTokenError(response);
       }
 
-      extractCurrentUser(decoded.id)
-        .then((currentUser) => {
-          request.currentUser = currentUser;
+      User.findById(decoded.id)
+        .populate('activeMatch', 'id')
+        .exec((error, user) => {
+          if (error) return renderUserNotFoundError(response, decoded.id);
+
+          request.currentUser = user;
           next();
-        })
-        .catch(() => renderUserNotFoundError(response, decoded.id));
+        });
     });
   } else {
     next();

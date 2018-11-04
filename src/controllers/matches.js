@@ -1,33 +1,7 @@
-const { User, Match, Sequelize } = require('../../db/models');
-
-const isMatchIdValid = (matchId) => {
-  const re = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-  return re.test(matchId);
-};
-
-const renderMatch = (match, response) => {
-  response.json({
-    success: true,
-    data: {
-      id: match.id,
-      state: match.state,
-    },
-  });
-};
-
-const renderMatchWithUsers = (match, response) => {
-  match.getUsers({ attributes: ['steamId'] })
-    .then((users) => {
-      response.json({
-        success: true,
-        data: {
-          id: match.id,
-          state: match.state,
-          users: users.map(user => user.steamId),
-        },
-      });
-    });
-};
+// const { User, Match, Sequelize } = require('../../db/models');
+const mongoose = require('mongoose');
+const Match = require('../models/Match');
+const User = require('../models/User');
 
 /**
  * @apiDefine MatchNotFoundError
@@ -38,7 +12,7 @@ const renderMatchWithUsers = (match, response) => {
  *   HTTP/1.1 404 Not Found
  *   {
  *     "success": false,
- *     "error": "Match with id ed3e03c3-954c-4744-9556-579caf90de05 not found"
+ *     "error": "Match with id 5bde2fe8191c439993275761 not found"
  *   }
  */
 
@@ -93,14 +67,14 @@ const renderUsersListNotProvidedError = (response) => {
  * @apiSuccess {Object} data Match information
  * @apiSuccess {String} data.id Unique match ID
  * @apiSuccess {Number} data.state State of match
- * @apiSuccess {Array} data.users Array of users
+ * @apiSuccess {Array[String]} data.users Array of users
  *
  * @apiSuccessExample Success-Response:
  *   HTTP/1.1 200 OK
  *     {
  *        "success": true,
  *        "data": {
- *            "id": "ed3e03c3-954c-4744-9556-579caf90de05",
+ *            "id": "5bde329b36dea19ab15d6ddb",
  *            "state": "active",
  *            "users": [
  *                "12345678901234567",
@@ -124,15 +98,18 @@ module.exports.create = (request, response) => {
     return renderUsersListNotProvidedError(response);
   }
 
-  const { Op } = Sequelize;
-
-  Match.create({ createdById: currentUser.id })
-    .then((record) => {
-      User.findAll({ where: { steamId: { [Op.in]: request.body.users } } })
-        .then((users) => {
-          record.addUsers(users).then(() => renderMatchWithUsers(record, response));
-        });
+  User.find({ steamId: { $in: request.body.users } }, (usersError, users) => {
+    Match.create({ createdBy: currentUser, users }, (error, match) => {
+      response.json({
+        success: true,
+        data: {
+          id: match.id,
+          state: match.state,
+          users: match.users.map(user => user.steamId),
+        },
+      });
     });
+  });
 };
 
 /**
@@ -158,7 +135,7 @@ module.exports.create = (request, response) => {
  *     {
  *        "success": true,
  *        "data": {
- *            "id": "ed3e03c3-954c-4744-9556-579caf90de05",
+ *            "id": "5bde2fe8191c439993275761",
  *            "state": "finished"
  *        }
  *    }
@@ -171,15 +148,19 @@ module.exports.create = (request, response) => {
  */
 
 module.exports.finish = (request, response) => {
-  if (!isMatchIdValid(request.params.id)) {
-    return renderMatchNotFoundError(request.params.id, response);
-  }
+  const query = { _id: mongoose.Types.ObjectId(request.params.id) };
+  const update = { finished: true };
+  const options = { new: true };
 
-  Match.findOne({ where: { id: request.params.id } })
-    .then((record) => {
-      if (!record) return renderMatchNotFoundError(request.params.id, response);
+  Match.findOneAndUpdate(query, update, options, (error, record) => {
+    if (error || !record) return renderMatchNotFoundError(request.params.id, response);
 
-      record.update({ state: 'finished' })
-        .then(updatedRecord => renderMatch(updatedRecord, response));
+    response.json({
+      success: true,
+      data: {
+        id: record.id,
+        finished: record.finished,
+      },
     });
+  });
 };

@@ -1,12 +1,14 @@
 const errorHandler = require('errorhandler');
 const express = require('express');
 const bodyParser = require('body-parser');
-const Env = require('./util/env');
+const loadVariables = require('./util/env');
+const initDb = require('./db');
 const logger = require('./util/logger');
-const authenticate = require('./api/middlewares/authenticate');
+const authenticate = require('./middlewares/authenticate');
 const { requestLogger, responseLogger } = require('./util/morgan');
 
-Env.loadVariables();
+loadVariables();
+initDb();
 
 const server = express();
 
@@ -18,7 +20,7 @@ server.use(responseLogger);
 server.use('/docs', express.static('apidoc'));
 server.set('port', process.env.PORT || 3000);
 
-const routes = require('./api/routes');
+const routes = require('./routes');
 
 routes.forEach(config => server.use(config.path, config.router));
 

@@ -1,8 +1,8 @@
 const express = require('express');
 
-const authController = require('../controllers/auth');
-const profileController = require('../controllers/profile');
-const matchesController = require('../controllers/matches');
+const authController = require('./controllers/auth');
+const profileController = require('./controllers/profile');
+const matchesController = require('./controllers/matches');
 
 const authRouter = express.Router();
 authRouter.post('/', authController.create);

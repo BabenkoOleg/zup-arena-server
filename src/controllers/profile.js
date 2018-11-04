@@ -20,6 +20,7 @@
  * @apiSuccess {Number} data.rank Current rank
  * @apiSuccess {Number} data.xp Amount of experience
  * @apiSuccess {Number} data.availableNewLootboxes Amount of available lootboxes
+ * @apiSuccess {String} data.activeMatchId ID of current match or null
  *
  * @apiSuccessExample Success-Response:
  *   HTTP/1.1 200 OK
@@ -54,6 +55,7 @@ module.exports.show = (request, response) => {
       rank: currentUser.rank,
       xp: currentUser.xp,
       availableNewLootboxes: currentUser.availableNewLootboxes,
+      activeMatchId: (currentUser.activeMatch ? currentUser.activeMatch.id : null),
     },
   });
 };

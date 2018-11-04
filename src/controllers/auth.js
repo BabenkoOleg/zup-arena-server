@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const SteamService = require('../../services/Steam');
-const { User } = require('../../db/models');
+const SteamService = require('../services/Steam');
+const User = require('../models/User');
 
 /**
  * @apiDefine TicketNotProvidedError
@@ -79,29 +79,33 @@ module.exports.create = (request, response) => {
     ticket: request.body.ticket,
   })
     .then((data) => {
-      User.findOrCreate({ where: { steamId: data.response.params.steamid } })
-        .spread((record) => {
-          const token = jwt.sign({
-            steamId: record.steamId,
-            id: record.id,
-          }, process.env.JWT_SECRET, {
-            expiresIn: '1h',
-          });
-          response.json({ success: true, jwt: token });
+      const query = { steamId: data.response.params.steamid };
+      const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+      User.findOneAndUpdate(query, {}, options, (error, result) => {
+        const token = jwt.sign({
+          steamId: result.steamId,
+          id: result.id,
+        }, process.env.JWT_SECRET, {
+          expiresIn: '7d',
         });
+        response.json({ success: true, jwt: token });
+      });
     })
     .catch(error => renderInvalidTicketError(response, error));
 };
 
 module.exports.testUser = (request, response) => {
-  User.findOne({ where: { steamId: '00000000000000000' } })
-    .then((record) => {
-      const token = jwt.sign({
-        steamId: record.steamId,
-        id: record.id,
-      }, process.env.JWT_SECRET, {
-        expiresIn: '7d',
-      });
-      response.json({ success: true, jwt: token });
+  const query = { steamId: '00000000000000000' };
+  const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+  User.findOneAndUpdate(query, {}, options, (error, result) => {
+    const token = jwt.sign({
+      steamId: result.steamId,
+      id: result.id,
+    }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
     });
+    response.json({ success: true, jwt: token });
+  });
 };
