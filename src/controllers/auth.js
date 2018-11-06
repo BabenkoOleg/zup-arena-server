@@ -87,7 +87,7 @@ module.exports.create = (request, response) => {
           steamId: result.steamId,
           id: result.id,
         }, process.env.JWT_SECRET, {
-          expiresIn: '7d',
+          expiresIn: '1h',
         });
         response.json({ success: true, jwt: token });
       });
