@@ -1,7 +1,6 @@
 // const { User, Match, Sequelize } = require('../../db/models');
 const mongoose = require('mongoose');
 const Match = require('../models/Match');
-const User = require('../models/User');
 
 /**
  * @apiDefine MatchNotFoundError
@@ -92,22 +91,18 @@ const renderUsersListNotProvidedError = (response) => {
  */
 
 module.exports.create = (request, response) => {
-  const { currentUser } = request;
-
   if (!request.body.users || !Array.isArray(request.body.users)) {
     return renderUsersListNotProvidedError(response);
   }
 
-  User.find({ steamId: { $in: request.body.users } }, (usersError, users) => {
-    Match.create({ createdBy: currentUser, users }, (error, match) => {
-      response.json({
-        success: true,
-        data: {
-          id: match.id,
-          state: match.state,
-          users: match.users.map(user => user.steamId),
-        },
-      });
+  Match.createFromUsersList(request.body.users, (error, match) => {
+    response.json({
+      success: true,
+      data: {
+        id: match.id,
+        state: match.state,
+        users: match.users.map(user => user.steamId),
+      },
     });
   });
 };
