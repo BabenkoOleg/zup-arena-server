@@ -6,7 +6,7 @@ module.exports = () => {
   mongoose.Promise = bluebird;
   mongoose.set('useCreateIndex', true);
   mongoose.set('useFindAndModify', false);
-  mongoose.set('debug', true);
+  mongoose.set('debug', process.env.NODE_ENV !== 'production');
   mongoose.connect(process.env.MONGODB_URI + process.env.MONGODB_DATABASE, {
     useNewUrlParser: true,
   }).then(() => logger.info('MongoDB connection established'))
