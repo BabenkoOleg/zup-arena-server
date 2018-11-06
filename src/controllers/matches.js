@@ -57,29 +57,23 @@ const renderUsersListNotProvidedError = (response) => {
  *     "Authorization": "Bearer xxx.zzz.yyy"
  *   }
  *
- * @apiParam {Array} users List of user's steamIds
+ * @apiParam {Array} users List of user's steamIds or Array of lists of user's steamIds
  *
- * @apiParamExample {json} Request-Example:
- *                  { "users": ["12345678901234567", "12345678901234568", "12345678901234569"] }
+ * @apiParamExample {json} Request-Example for single mode:
+ *                  { "users": ["12345678901234567", "12345678901234568"] }
+ * @apiParamExample {json} Request-Example for team mode:
+ *                  { "users": [["12345678901234567"], ["12345678901234568"]] }
  *
  * @apiSuccess {Boolean} success Successful execution of the request
  * @apiSuccess {Object} data Match information
  * @apiSuccess {String} data.id Unique match ID
- * @apiSuccess {Number} data.state State of match
- * @apiSuccess {Array[String]} data.users Array of users
  *
  * @apiSuccessExample Success-Response:
  *   HTTP/1.1 200 OK
  *     {
  *        "success": true,
  *        "data": {
- *            "id": "5bde329b36dea19ab15d6ddb",
- *            "state": "active",
- *            "users": [
- *                "12345678901234567",
- *                "12345678901234568",
- *                "12345678901234569"
- *            ]
+ *            "id": "5bde329b36dea19ab15d6ddb"
  *        }
  *    }
  *
