@@ -125,7 +125,7 @@ module.exports.finish = (request, response) => {
  *     "Authorization": "Bearer xxx.zzz.yyy"
  *   }
  *
- * @apiParam {String} target Killed user steamIs
+ * @apiParam {String} target Killed user steamId
  *
  * @apiParamExample {json} Request-Example:
  *                  { "target": "12345678901234567" }
