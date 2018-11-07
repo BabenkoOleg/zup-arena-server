@@ -37,6 +37,28 @@ schema.statics.createFromUsersList = function createFromUsersList(usersList, cb)
   return this.create({ team, users }, cb);
 };
 
+schema.methods.kill = function kill(currentUser, steamId, cb) {
+  const target = this.users.find(user => user.steamId === steamId);
+
+  if (!target) return cb('Target user not found');
+  if (!target.alive) return cb('Target user already killed');
+
+  target.alive = false;
+  this.kills.push({ staemId: currentUser.steamId, target: target.steamId });
+
+  return this.save(cb);
+};
+
+schema.methods.death = function kill(currentUser, steamId, cb) {
+  const killer = this.users.find(user => user.steamId === steamId);
+
+  if (!killer) return cb('Killer not found');
+
+  this.deaths.push({ steamId: currentUser.steamId, killer: killer.steamId });
+
+  return this.save(cb);
+};
+
 const Match = mongoose.model('Match', schema);
 
 module.exports = Match;

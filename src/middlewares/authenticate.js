@@ -7,111 +7,42 @@ const extractJwt = (row) => {
   return result ? result[1] : null;
 };
 
-/**
- * @apiDefine TokenNotProvidedError
- *
- * @apiError TokenNotProvidedError Authorization token not provided (Missing Authorization header)
- *
- * @apiErrorExample TokenNotProvidedError:
- *   HTTP/1.1 401 Unauthorized
- *   {
- *     "success": false,
- *     "error": "Token not provided"
- *   }
- */
-
-const renderTokenNotProvidedError = (response) => {
-  response.status(401);
-  response.json({
-    success: false,
-    error: 'Token not provided',
-  });
-};
-
-/**
- * @apiDefine InvalidTokenError
- *
- * @apiError InvalidToken The authorization token is not a token signed by a server
- *
- * @apiErrorExample Error-Response:
- *   HTTP/1.1 401 Unauthorized
- *   {
- *     "success": false,
- *     "error": "Invalid Token"
- *   }
- */
-
-const renderInvalidTokenError = (response) => {
-  response.status(401);
-  response.json({
-    success: false,
-    error: 'Invalid token',
-  });
-};
-
-/**
- * @apiDefine TokenExpiredError
- *
- * @apiError TokenExpiredError Authorization token has expired
- *
- * @apiErrorExample TokenExpiredError:
- *   HTTP/1.1 401 Unauthorized
- *   {
- *     "success": false,
- *     "error": "Token expired"
- *   }
- */
-
-const renderTokenExpiredError = (response) => {
-  response.status(401);
-  response.json({
-    success: false,
-    error: 'Token expired',
-  });
-};
-
-/**
- * @apiDefine UserNotFoundError
- *
- * @apiError UserNotFoundError User with id from token not found
- *
- * @apiErrorExample UserNotFoundError:
- *   HTTP/1.1 403 Forbidden
- *   {
- *     "success": false,
- *     "error": "User with id 93df2547-e8b8-46fa-83ef-51dd799f87e5 not found"
- *   }
- */
-
-const renderUserNotFoundError = (response, id) => {
-  response.status(403);
-  response.json({
-    success: false,
-    error: `User with id ${id} not found`,
-  });
-};
-
 module.exports = (request, response, next) => {
-  if (!request.path.includes('/auth') && !request.path.includes('/docs') && !request.path.includes('/appid')) {
-    const jwtHeader = request.get('Authorization');
-    if (!jwtHeader) return renderTokenNotProvidedError(response);
+  if (request.path.includes('/auth') || request.path.includes('/docs')) return next();
 
-    jwt.verify(extractJwt(jwtHeader), process.env.JWT_SECRET, (jwtError, decoded) => {
-      if (jwtError) {
-        if (jwtError.name === 'TokenExpiredError') return renderTokenExpiredError(response);
-        return renderInvalidTokenError(response);
-      }
+  const jwtHeader = request.get('Authorization');
 
-      User.findById(decoded.id)
-        .populate('activeMatch', 'id')
-        .exec((error, user) => {
-          if (error) return renderUserNotFoundError(response, decoded.id);
-
-          request.currentUser = user;
-          next();
-        });
+  if (!jwtHeader) {
+    response.status(401);
+    response.json({
+      success: false,
+      error: 'Token not provided',
     });
   } else {
-    next();
+    jwt.verify(extractJwt(jwtHeader), process.env.JWT_SECRET, (jwtError, decoded) => {
+      if (jwtError) {
+        response.status(401);
+        if (jwtError.name === 'TokenExpiredError') {
+          response.json({ success: false, error: 'Token expired' });
+        } else {
+          response.json({ success: false, error: 'Invalid token' });
+        }
+      } else {
+        User.findById(decoded.id)
+          .populate('activeMatch', 'id')
+          .exec((error, user) => {
+            if (error) {
+              response.status(401);
+              response.json({
+                success: false,
+                error: `User with id ${decoded.id} not found`,
+              });
+            } else {
+              request.currentUser = user;
+              next();
+            }
+          });
+      }
+    });
   }
 };

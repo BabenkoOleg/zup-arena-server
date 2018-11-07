@@ -1,7 +1,7 @@
 const express = require('express');
 
-const authController = require('./controllers/auth');
-const profileController = require('./controllers/profile');
+const authController = require('./controllers/authController');
+const profileController = require('./controllers/profileController');
 const matchesController = require('./controllers/matches');
 
 const authRouter = express.Router();
@@ -14,13 +14,8 @@ profileRouter.get('/', profileController.show);
 const matchesRouter = express.Router();
 matchesRouter.post('/', matchesController.create);
 matchesRouter.post('/:id/finish', matchesController.finish);
-
-const envTestRouter = express.Router();
-envTestRouter.get('/', (request, response) => {
-  response.json({
-    appid: process.env.STEAM_APP_ID,
-  });
-});
+matchesRouter.post('/:id/kill', matchesController.kill);
+matchesRouter.post('/:id/death', matchesController.death);
 
 module.exports = [
   {
@@ -32,8 +27,5 @@ module.exports = [
   }, {
     path: '/matches',
     router: matchesRouter,
-  }, {
-    path: '/appid',
-    router: envTestRouter,
   },
 ];
