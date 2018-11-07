@@ -153,7 +153,7 @@ module.exports.kill = (request, response) => {
         .json({ success: false, error: `Match with id ${request.params.id} not found` });
     }
 
-    match.killUser(currentUser, request.body.target, (killError) => {
+    match.kill(currentUser, request.body.target, (killError) => {
       if (killError) return response.status(422).json({ success: false, error: killError });
       response.json({ success: true });
     });
