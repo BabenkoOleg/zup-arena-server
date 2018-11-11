@@ -1,48 +1,37 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const te = require('../util/throwErrorWithStatus');
 
-const extractJwt = (row) => {
+const extractToken = (request) => {
+  const jwtHeader = request.get('Authorization');
+  if (!jwtHeader) te('Authorization header not provided', 401);
+
   const re = new RegExp(/Bearer\s(.+)/);
-  const result = re.exec(row);
-  return result ? result[1] : null;
+  const result = re.exec(jwtHeader);
+
+  if (!result || !result[1]) te('Invalid Authorizaton header', 401);
+  return result[1];
 };
 
-module.exports = (request, response, next) => {
+module.exports = async (request, response, next) => {
   if (request.path.includes('/auth') || request.path.includes('/docs')) return next();
 
-  const jwtHeader = request.get('Authorization');
+  try {
+    const token = extractToken(request);
 
-  if (!jwtHeader) {
-    response.status(401);
-    response.json({
-      success: false,
-      error: 'Token not provided',
-    });
-  } else {
-    jwt.verify(extractJwt(jwtHeader), process.env.JWT_SECRET, (jwtError, decoded) => {
-      if (jwtError) {
-        response.status(401);
-        if (jwtError.name === 'TokenExpiredError') {
-          response.json({ success: false, error: 'Token expired' });
-        } else {
-          response.json({ success: false, error: 'Invalid token' });
-        }
-      } else {
-        User.findById(decoded.id)
-          .populate('activeMatch', 'id')
-          .exec((error, user) => {
-            if (error) {
-              response.status(401);
-              response.json({
-                success: false,
-                error: `User with id ${decoded.id} not found`,
-              });
-            } else {
-              request.currentUser = user;
-              next();
-            }
-          });
-      }
-    });
+    let decoded = null;
+
+    try {
+      decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      const message = error.name === 'TokenExpiredError' ? 'JWT is expired' : 'JWT is invalid';
+      te(message, 401);
+    }
+
+    const user = await User.findById(decoded.id).populate('activeMatch', 'id').exec();
+    request.currentUser = user;
+    next();
+  } catch (error) {
+    response.status(error.status || 500).json({ error: error.message });
   }
 };

@@ -25,13 +25,8 @@ const routes = require('./routes');
 routes.forEach(config => server.use(config.path, config.router));
 
 server.use((error, req, res, next) => {
-  res.status(500);
-  const body = {
-    status: false,
-    error: 'Something went wrong',
-  };
-  if (process.env.NODE_ENV !== 'production') body.description = error.message;
-  res.json(body);
+  res.status(error.status || 500);
+  res.json({ error: error.message });
   next();
 });
 

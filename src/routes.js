@@ -13,6 +13,8 @@ profileRouter.get('/', profileController.show);
 
 const matchesRouter = express.Router();
 matchesRouter.post('/', matchesController.create);
+matchesRouter.get('/:id', matchesController.show);
+matchesRouter.post('/:id/round', matchesController.round);
 matchesRouter.post('/:id/finish', matchesController.finish);
 matchesRouter.post('/:id/kill', matchesController.kill);
 matchesRouter.post('/:id/death', matchesController.death);
