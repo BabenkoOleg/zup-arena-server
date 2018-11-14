@@ -36,7 +36,7 @@ module.exports = {
       repo: 'git@github.com:BabenkoOleg/zup-arena-server.git',
       path: '/home/deploy/zup-arena-server',
       ssh_options: ['ForwardAgent=yes'],
-      'post-deploy': 'npm install && cp ~/.env .env && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': '/home/deploy/.nvm/versions/node/v11.1.0/bin/npm install && cp ~/.env .env && pm2 reload ecosystem.config.js --env production',
     },
   },
 };
