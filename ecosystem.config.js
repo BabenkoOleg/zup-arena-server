@@ -2,6 +2,7 @@ module.exports = {
   apps: [{
     name: 'API Production',
     script: 'src/server.js',
+    interpreter: 'node@11.1.0',
     instances: 1,
     autorestart: true,
     watch: false,
@@ -15,6 +16,7 @@ module.exports = {
   }, {
     name: 'API Staging',
     script: 'src/server.js',
+    interpreter: 'node@11.1.0',
     instances: 1,
     autorestart: true,
     watch: false,
