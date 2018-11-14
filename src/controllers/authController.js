@@ -67,7 +67,7 @@ module.exports.testUser = async (request, response) => {
     const payload = { steamId: user.steamId, id: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    response.json({ success: true, jwt: token });
+    response.json({ jwt: token });
   } catch (error) {
     response.status(error.code || 500).json({ error: error.message });
   }
