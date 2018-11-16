@@ -52,7 +52,7 @@ module.exports.create = async (request, response) => {
 };
 
 /**
- * @api {get} /api/credentials Request credentials
+ * @api {get} /api/matches/:id/credentials Request credentials
  * @apiName MatchCredentials
  * @apiVersion 0.1.0
  * @apiGroup Match
