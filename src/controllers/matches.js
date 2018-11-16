@@ -20,7 +20,6 @@ const te = require('../util/throwErrorWithStatus');
  *
  * @apiParamExample {json} Request-Example
  *   {
- *     "team": true,
  *     "users": [["12345678901234567"], ["12345678901234568"]]
  *   }
  *
@@ -39,30 +38,12 @@ module.exports.create = async (request, response) => {
       te('Users list not provided', 422);
     }
 
-    const userSteamIdList = request.body.users;
-    const isTeamMatch = request.body.team || true;
-
+    const usersList = request.body.users;
     const users = [];
-    const teams = [];
 
-    userSteamIdList.forEach((list, index) => {
-      const team = { users: [] };
+    usersList.forEach((l, i) => l.forEach(steamId => users.push({ steamId, team: i })));
 
-      list.forEach((steamId) => {
-        const user = ({ steamId, team: index });
-        team.users.push(user);
-        users.push(user);
-      });
-
-      teams.push(team);
-    });
-
-    const match = await Match.create({
-      team: isTeamMatch,
-      teams,
-      users,
-      rounds: [{}],
-    });
+    const match = await Match.create({ users, rounds: [] });
 
     response.json({ id: match.id });
   } catch (error) {
@@ -276,7 +257,7 @@ module.exports.show = async (request, response) => {
     const match = await Match.findById(request.params.id);
     if (!match) te(`Match with id ${request.params.id} not found`, 404);
     response.status(200).json(match);
-  } catch(error) {
+  } catch (error) {
     response.status(error.status || 500).json({ error: error.message });
   }
 };

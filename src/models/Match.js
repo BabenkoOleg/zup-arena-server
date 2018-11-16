@@ -3,27 +3,24 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const schema = new Schema({
-  team: { type: Boolean, default: false },
-  finished: { type: Boolean, default: false },
-  finishedAt: { type: Date },
+  state: {
+    type: String,
+    default: 'active',
+  },
   users: [{
     steamId: String,
     team: Number,
+    aesKey: String,
+    aesIv: String,
   }],
   rounds: [{
-    winningTeams: { type: Array, default: [] },
+    winningTeams: {
+      type: Array,
+      default: [],
+    },
     kills: [{
       killer: String,
       target: String,
-    }],
-    deaths: [{
-      killer: String,
-      target: String,
-    }],
-  }],
-  teams: [{
-    users: [{
-      steamId: String,
     }],
   }],
 });
