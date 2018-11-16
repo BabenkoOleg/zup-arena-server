@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const Match = require('../models/Match');
 const te = require('../util/throwErrorWithStatus');
+const aes = require('../util/aes');
 
 /**
  * @api {post} /api/matches Request create Match
@@ -15,7 +16,6 @@ const te = require('../util/throwErrorWithStatus');
  *   {
  *     "Authorization": "Bearer xxx.zzz.yyy"
  *   }
- * @apiParam {Boolean} team Team or solo match
  * @apiParam {Array} users List of user's steamIds or Array of lists of user's steamIds
  *
  * @apiParamExample {json} Request-Example
@@ -46,6 +46,55 @@ module.exports.create = async (request, response) => {
     const match = await Match.create({ users, rounds: [] });
 
     response.json({ id: match.id });
+  } catch (error) {
+    response.status(error.status || 500).json({ error: error.message });
+  }
+};
+
+/**
+ * @api {get} /api/credentials Request credentials
+ * @apiName MatchCredentials
+ * @apiVersion 0.1.0
+ * @apiGroup Match
+ *
+ * @apiPermission Authorized users only
+ * @apiHeader {String} Authorization Server-signed authentication token
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     "Authorization": "Bearer xxx.zzz.yyy"
+ *   }
+ *
+ * @apiSuccess {String} key 256-bit secret key
+ * @apiSuccess {String} iv Vector (16-bytes)
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *     {
+ *       "key": "42-DC-64-3A-DF-DE-B4-F0-7A-78...",
+ *       "iv": "B0-7B-39-FC-6B-72-9E-5E-17-93..."
+ *     }
+ */
+
+module.exports.credentials = async (request, response) => {
+  const { currentUser } = request;
+
+  try {
+    const match = await Match.findById(request.params.id);
+    if (!match) te(`Match with id ${request.params.id} not found`, 404);
+
+    const user = match.users.find(u => u.steamId === currentUser.steamId);
+
+    if (!user.aesKey || !user.aesIv) {
+      user.aesKey = aes.randomAesKey();
+      user.aesIv = aes.randomAesIv();
+
+      await match.save();
+    }
+
+    response.json({
+      key: aes.hexWithDashes(user.aesKey),
+      iv: aes.hexWithDashes(user.aesIv),
+    });
   } catch (error) {
     response.status(error.status || 500).json({ error: error.message });
   }
