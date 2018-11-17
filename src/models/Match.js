@@ -10,6 +10,10 @@ const schema = new Schema({
   users: [{
     steamId: String,
     team: Number,
+    frags: {
+      type: Number,
+      default: 0,
+    },
     aesKey: String,
     aesIv: String,
   }],
