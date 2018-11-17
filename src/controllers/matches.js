@@ -1,5 +1,4 @@
 // const { User, Match, Sequelize } = require('../../db/models');
-const mongoose = require('mongoose');
 const Match = require('../models/Match');
 const te = require('../util/throwErrorWithStatus');
 const aes = require('../util/aes');
@@ -121,180 +120,51 @@ module.exports.credentials = async (request, response) => {
 module.exports.round = async (request, response) => {
   try {
     const match = await Match.findById(request.params.id);
-    if (!match) te(`Match with id ${request.params.id} not found`, 404);
 
-    const round = match.rounds[match.rounds.length - 1];
+    const reports = [];
+    let kills = [];
 
-    let users = match.users.slice();
+    request.body.kills.forEach((row) => {
+      const rowParts = row.split('#');
+      const steamId = rowParts[0];
+      const encrypted = rowParts[1];
+      const user = match.users.find(u => u.steamId === steamId);
+      const decrypted = aes.decrypt(encrypted, user.aesKey, user.aesIv);
 
-    round.kills.forEach((k) => {
-      if (round.deaths.find(d => d.killer === k.killer && d.target === k.target)) {
-        users = users.filter(u => u.steamId !== k.target);
-      }
+      reports.push({
+        user,
+        kills: JSON.parse(decrypted),
+      });
     });
 
-    round.winningTeams = [...new Set(users.map(u => u.team))];
+    reports.forEach((report) => {
+      report.kills.forEach((newKill) => {
+        const killer = match.users.find(u => u.steamId === newKill.killer);
+        const target = match.users.find(u => u.steamId === newKill.target);
 
-    match.rounds.push({});
+        if (killer && target && killer.team !== target.team) {
+          const kill = kills.find(k => k.killer === newKill.killer && k.target === newKill.target);
 
-    await match.save();
-    response.status(200).json({});
-  } catch (error) {
-    response.status(error.status || 500).json({ error: error.message });
-  }
-};
+          if (kill) return kill.count += 1;
 
-/**
- * @api {post} /api/matches/:id/finish Request finish Match
- * @apiName FinishMatch
- * @apiVersion 0.1.0
- * @apiGroup Match
- *
- * @apiPermission Authorized users only
- * @apiHeader {String} Authorization Server-signed authentication token
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     "Authorization": "Bearer xxx.zzz.yyy"
- *   }
- *
- * @apiSuccess {Boolean} success Successful execution of the request
- * @apiSuccess {Object} data Match information
- * @apiSuccess {String} data.id Unique match ID
- * @apiSuccess {Number} data.state State of match
- *
- * @apiSuccessExample Success-Response:
- *   HTTP/1.1 200 OK
- *     {
- *        "success": true,
- *        "data": {
- *            "id": "5bde2fe8191c439993275761",
- *            "state": "finished"
- *        }
- *    }
- */
-
-module.exports.finish = (request, response) => {
-  const query = { _id: mongoose.Types.ObjectId(request.params.id) };
-  const update = { finished: true };
-  const options = { new: true };
-
-  Match.findOneAndUpdate(query, update, options, (error, record) => {
-    if (error || !record) {
-      response.status(422);
-      response.json({
-        success: false,
-        error: `Match with id ${request.params.id} not found`,
+          kills.push({
+            user: killer,
+            killer: newKill.killer,
+            target: newKill.target,
+            count: 1,
+          });
+        }
       });
-    } else {
-      response.json({
-        success: true,
-        data: {
-          id: record.id,
-          finished: record.finished,
-        },
-      });
-    }
-  });
-};
+    });
 
-/**
- * @api {post} /api/matches/:id/kill Report the kill
- * @apiName KillUser
- * @apiDescription Report that the current user has killed another user
- * @apiVersion 0.1.0
- * @apiGroup Match
- *
- * @apiPermission Authorized users only
- * @apiHeader {String} Authorization Server-signed authentication token
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     "Authorization": "Bearer xxx.zzz.yyy"
- *   }
- *
- * @apiParam {String} target Killed user steamId
- *
- * @apiParamExample {json} Request-Example:
- *   {
- *     "target": "12345678901234567"
- *   }
- *
- * @apiSuccessExample Success-Response:
- *   HTTP/1.1 200 OK
- */
+    kills = kills.filter(k => (k.count / reports.length) > 0.5);
+    kills.forEach(kill => (kill.user.frags += 1));
+    kills = kills.map(k => ({ killer: k.killer, target: k.target }));
 
-module.exports.kill = async (request, response) => {
-  const { currentUser } = request;
-
-  try {
-    const match = await Match.findById(request.params.id);
-    if (!match) te(`Match with id ${request.params.id} not found`, 404);
-    if (!request.body.target) te('Target not provided', 422);
-
-    const { target } = request.body;
-    if (!match.users.find(u => u.steamId === target)) {
-      te(`User with id ${target} is not registered in this match`, 422);
-    }
-
-    const round = match.rounds[match.rounds.length - 1];
-    const kill = round.kills.find(k => k.target === target);
-
-    if (kill) te(`User with id ${target} is already killed`, 422);
-
-    round.kills.push({ killer: currentUser.steamId, target });
+    match.rounds.push({ kills });
 
     await match.save();
-    response.status(200).json({});
-  } catch (error) {
-    response.status(error.status || 500).json({ error: error.message });
-  }
-};
 
-/**
- * @api {post} /api/matches/:id/death Report the death
- * @apiName DeathUser
- * @apiDescription Report that the current user has been killed by another user
- * @apiVersion 0.1.0
- * @apiGroup Match
- *
- * @apiPermission Authorized users only
- * @apiHeader {String} Authorization Server-signed authentication token
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     "Authorization": "Bearer xxx.zzz.yyy"
- *   }
-
- * @apiParam {String} killer Killer user steamId
- *
- * @apiParamExample {json} Request-Example:
- *   {
- *     "killer": "12345678901234567"
- *   }
- *
- * @apiSuccessExample Success-Response:
- *   HTTP/1.1 200 OK
- */
-
-module.exports.death = async (request, response) => {
-  const { currentUser } = request;
-
-  try {
-    const match = await Match.findById(request.params.id);
-    if (!match) te(`Match with id ${request.params.id} not found`, 404);
-    if (!request.body.killer) te('Killer not provided', 422);
-
-    const { killer } = request.body;
-    if (!match.users.find(u => u.steamId === killer)) {
-      te(`User with id ${killer} is not registered in this match`, 422);
-    }
-
-    const round = match.rounds[match.rounds.length - 1];
-    const death = round.deaths.find(k => k.target === currentUser.steamId);
-
-    if (death) te('You are already killed', 422);
-
-    round.deaths.push({ killer, target: currentUser.steamId });
-
-    await match.save();
     response.status(200).json({});
   } catch (error) {
     response.status(error.status || 500).json({ error: error.message });
