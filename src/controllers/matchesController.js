@@ -15,6 +15,7 @@ const aes = require('../util/aes');
  *   {
  *     "Authorization": "Bearer xxx.zzz.yyy"
  *   }
+ *
  * @apiParam {Array} users List of user's steamIds or Array of lists of user's steamIds
  *
  * @apiParamExample {json} Request-Example
@@ -114,6 +115,29 @@ module.exports.credentials = async (request, response) => {
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     "Authorization": "Bearer xxx.zzz.yyy"
+ *   }
+ *
+ * @apiParam {Boolean} timeIsUp Expired match time. If there is no parameter in the request,
+ *                     the default value is false
+ * @apiParam {Boolean} finish The final round of the match. If there is no parameter in the request,
+ *                     the default value is false
+ * @apiParam {Array} reports List of encrypted users reports. Format - steamId#encrypdet-data.
+ *                           The encrypted part must contain a JSON data array of the format:
+ *                           [
+ *                             { killer: '00000000000000001', target: '00000000000000000' },
+ *                             { killer: '00000000000000003', target: '00000000000000001'}
+ *                           ]
+ *
+ * @apiParamExample {json} Request-Example
+ *   {
+ *     "timeIsUp": false,
+ *     "finish": false,
+ *     "reports": [
+ *       "00000000000000000#ab331ab864150a92a5cd6846c4...",
+ *       "00000000000000001#c96d21ab612d524853516d16ac...",
+ *       "00000000000000002#81f5a0b7a081329af13873d4af...",
+ *       "00000000000000003#a73d675e0588162ccd45d815bb..."
+ *     ]
  *   }
  *
  * @apiSuccessExample Success-Response:
