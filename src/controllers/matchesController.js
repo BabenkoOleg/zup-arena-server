@@ -122,11 +122,8 @@ module.exports.credentials = async (request, response) => {
  * @apiParam {Boolean} finish The final round of the match. If there is no parameter in the request,
  *                     the default value is false
  * @apiParam {Array} reports List of encrypted users reports. Format - steamId#encrypdet-data.
- *                           The encrypted part must contain a JSON data array of the format:
- *                           [
- *                             { killer: '00000000000000001', target: '00000000000000000' },
- *                             { killer: '00000000000000003', target: '00000000000000001'}
- *                           ]
+ *                           The encrypted part must contain a JSON data array as
+ *                           Encrypted-Part-Example
  *
  * @apiParamExample {json} Request-Example
  *   {
@@ -139,6 +136,18 @@ module.exports.credentials = async (request, response) => {
  *       "00000000000000003#a73d675e0588162ccd45d815bb..."
  *     ]
  *   }
+ *
+ * @apiParamExample {json} Encrypted-Part-Example
+ *   [
+ *     {
+ *       "killer": "00000000000000001",
+ *       "target": "00000000000000000"
+ *     },
+ *     {
+ *       "killer": "00000000000000003",
+ *       "target": "00000000000000001"
+ *     }
+ *  ]
  *
  * @apiSuccessExample Success-Response:
  *   HTTP/1.1 200 OK
