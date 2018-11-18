@@ -2,11 +2,11 @@ const express = require('express');
 
 const authController = require('./controllers/authController');
 const profileController = require('./controllers/profileController');
-const matchesController = require('./controllers/matches');
+const matchesController = require('./controllers/matchesController');
 
 const authRouter = express.Router();
 authRouter.post('/', authController.create);
-authRouter.get('/test-user', authController.testUser);
+authRouter.get('/test-user/:id', authController.testUser);
 
 const profileRouter = express.Router();
 profileRouter.get('/', profileController.show);

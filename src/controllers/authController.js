@@ -58,7 +58,7 @@ module.exports.create = async (request, response) => {
 };
 
 module.exports.testUser = async (request, response) => {
-  const query = { steamId: '00000000000000000' };
+  const query = { steamId: request.params.id || '00000000000000000' };
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
   try {

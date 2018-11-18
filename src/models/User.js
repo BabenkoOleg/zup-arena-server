@@ -12,6 +12,13 @@ const schema = new Schema({
   activeMatch: { type: Schema.Types.ObjectId, ref: 'Match' },
 });
 
+schema.methods.addAwards = async function (money, xp) {
+  this.money += money;
+  this.xp += xp;
+
+  await this.save();
+};
+
 const User = mongoose.model('User', schema);
 
 module.exports = User;

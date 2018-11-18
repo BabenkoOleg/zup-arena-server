@@ -40,7 +40,16 @@ module.exports.create = async (request, response) => {
     const usersList = request.body.users;
     const users = [];
 
-    usersList.forEach((l, i) => l.forEach(steamId => users.push({ steamId, team: i })));
+    usersList.forEach((list, index) => {
+      list.forEach(steamId => users.push({
+        steamId,
+        team: index,
+        aes: {
+          key: aes.randomAesKey(),
+          iv: aes.randomAesIv(),
+        },
+      }));
+    });
 
     const match = await Match.create({ users, rounds: [] });
 
@@ -82,17 +91,11 @@ module.exports.credentials = async (request, response) => {
     if (!match) te(`Match with id ${request.params.id} not found`, 404);
 
     const user = match.users.find(u => u.steamId === currentUser.steamId);
-
-    if (!user.aesKey || !user.aesIv) {
-      user.aesKey = aes.randomAesKey();
-      user.aesIv = aes.randomAesIv();
-
-      await match.save();
-    }
+    if (!user) te(`User with steamId ${currentUser.steamId} not found in this match`, 404);
 
     response.json({
-      key: aes.hexWithDashes(user.aesKey),
-      iv: aes.hexWithDashes(user.aesIv),
+      key: aes.hexWithDashes(user.aes.key),
+      iv: aes.hexWithDashes(user.aes.iv),
     });
   } catch (error) {
     response.status(error.status || 500).json({ error: error.message });
@@ -121,49 +124,13 @@ module.exports.round = async (request, response) => {
   try {
     const match = await Match.findById(request.params.id);
 
-    const reports = [];
-    let kills = [];
+    const { reports } = request.body;
+    const timeIsUp = request.body.timeIsUp || false;
+    const finish = request.body.finish || false;
 
-    request.body.kills.forEach((row) => {
-      const rowParts = row.split('#');
-      const steamId = rowParts[0];
-      const encrypted = rowParts[1];
-      const user = match.users.find(u => u.steamId === steamId);
-      const decrypted = aes.decrypt(encrypted, user.aesKey, user.aesIv);
+    await match.addRound(reports, timeIsUp);
 
-      reports.push({
-        user,
-        kills: JSON.parse(decrypted),
-      });
-    });
-
-    reports.forEach((report) => {
-      report.kills.forEach((newKill) => {
-        const killer = match.users.find(u => u.steamId === newKill.killer);
-        const target = match.users.find(u => u.steamId === newKill.target);
-
-        if (killer && target && killer.team !== target.team) {
-          const kill = kills.find(k => k.killer === newKill.killer && k.target === newKill.target);
-
-          if (kill) return kill.count += 1;
-
-          kills.push({
-            user: killer,
-            killer: newKill.killer,
-            target: newKill.target,
-            count: 1,
-          });
-        }
-      });
-    });
-
-    kills = kills.filter(k => (k.count / reports.length) > 0.5);
-    kills.forEach(kill => (kill.user.frags += 1));
-    kills = kills.map(k => ({ killer: k.killer, target: k.target }));
-
-    match.rounds.push({ kills });
-
-    await match.save();
+    if (finish) await match.finish();
 
     response.status(200).json({});
   } catch (error) {
