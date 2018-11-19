@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 const aes = require('../util/aes');
+const logger = require('../util/logger');
 
 const { Schema } = mongoose;
 
@@ -43,6 +44,8 @@ schema.methods.addRound = async function (usersReports, timeIsUp) {
     const encrypted = rowParts[1];
     const user = this.users.find(u => u.steamId === steamId);
     const decrypted = aes.decrypt(encrypted, user.aes.key, user.aes.iv);
+
+    logger.info(decrypted);
 
     reports.push({ user, kills: JSON.parse(decrypted) });
   });
