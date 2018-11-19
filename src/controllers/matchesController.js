@@ -169,6 +169,7 @@ module.exports.round = async (request, response) => {
 
     response.status(200).json({});
   } catch (error) {
+    logger.info(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };
