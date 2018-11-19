@@ -2,6 +2,7 @@
 const Match = require('../models/Match');
 const te = require('../util/throwErrorWithStatus');
 const aes = require('../util/aes');
+const logger = require('../util/logger');
 
 /**
  * @api {post} /api/matches Request create Match
@@ -156,6 +157,7 @@ module.exports.credentials = async (request, response) => {
 module.exports.round = async (request, response) => {
   try {
     const match = await Match.findById(request.params.id);
+    logger.info(request.body);
 
     const { reports } = request.body;
     const timeIsUp = request.body.timeIsUp || false;
