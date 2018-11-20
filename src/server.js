@@ -1,5 +1,6 @@
 const errorHandler = require('errorhandler');
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const loadVariables = require('./util/env');
 const initDb = require('./db');
@@ -13,6 +14,7 @@ initDb();
 const server = express();
 
 server.use(errorHandler());
+server.use(cors());
 server.use(bodyParser.json());
 server.use(requestLogger);
 server.use(authenticate);

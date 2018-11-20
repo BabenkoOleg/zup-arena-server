@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const SteamService = require('../services/Steam');
-const User = require('../models/User');
-const te = require('../util/throwErrorWithStatus');
+const SteamService = require('../../services/Steam');
+const User = require('../../models/User');
+const te = require('../../util/throwErrorWithStatus');
 
 /**
  * @api {post} /api/auth Request User authorization through the steam ticket
@@ -58,7 +58,7 @@ module.exports.create = async (request, response) => {
 };
 
 module.exports.testUser = async (request, response) => {
-  const query = { steamId: '00000000000000000' };
+  const query = { steamId: request.params.id || '00000000000000000' };
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
   try {
