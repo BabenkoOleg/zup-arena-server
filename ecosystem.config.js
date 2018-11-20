@@ -32,7 +32,7 @@ module.exports = {
     production: {
       user: 'deploy',
       host: '5.200.53.101',
-      ref: 'origin/match-results-based-on-encrypted-reports',
+      ref: 'origin/master',
       repo: 'git@github.com:BabenkoOleg/zup-arena-server.git',
       path: '/home/deploy/zup-arena/server',
       ssh_options: ['ForwardAgent=yes'],
