@@ -97,7 +97,10 @@ schema.methods.finish = async function () {
   this.state = 'finished';
   this.finishedAt = Date.now();
 
-  this.winningTeams = [...new Set(this.rounds.map(round => round.winningTeams).flat())];
+  const wins = this.rounds.map(round => round.winningTeams).flat();
+  const winsByTeam = wins.reduce((acc, val) => acc.set(val, acc.get(val) + 1 || 1), new Map());
+  const maxWinsCount = Math.max(...winsByTeam.values());
+  this.winningTeams = [...winsByTeam.keys()].filter(key => winsByTeam.get(key) === maxWinsCount);
 
   this.users.forEach(async (matchUser) => {
     const isWinner = this.winningTeams.includes(matchUser.team);
