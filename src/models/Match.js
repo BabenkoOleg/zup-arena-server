@@ -27,6 +27,7 @@ const schema = new Schema({
   }],
   rounds: [{
     winningTeams: { type: Array, default: [] },
+    timeIsUp: { type: Boolean, default: false },
     kills: [{ killer: String, target: String }],
   }],
   winningTeams: { type: Array, default: [] },
@@ -78,7 +79,7 @@ schema.methods.addRound = async function (usersReports, timeIsUp) {
   });
   kills = kills.map(k => ({ killer: k.killer, target: k.target }));
 
-  const round = { kills };
+  const round = { kills, timeIsUp };
 
   if (!timeIsUp) {
     const killed = kills.map(kill => kill.target);

@@ -28,6 +28,7 @@ module.exports.show = async (request, response) => {
       rounds: match.rounds.map((round, i) => ({
         number: (i + 1),
         winningTeams: round.winningTeams,
+        timeIsUp: round.timeIsUp,
         kills: round.kills.map(kill => ({
           killer: kill.killer,
           killerTeam: match.users.find(user => user.steamId === kill.killer).team,
