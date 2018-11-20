@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const SteamService = require('../services/Steam');
-const User = require('../models/User');
-const te = require('../util/throwErrorWithStatus');
+const SteamService = require('../../services/Steam');
+const User = require('../../models/User');
+const te = require('../../util/throwErrorWithStatus');
 
 /**
  * @api {post} /api/auth Request User authorization through the steam ticket

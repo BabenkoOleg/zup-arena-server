@@ -55,7 +55,8 @@ schema.methods.addRound = async function (usersReports, timeIsUp) {
       const killer = this.users.find(u => u.steamId === newKill.killer);
       const target = this.users.find(u => u.steamId === newKill.target);
 
-      if (killer && target && killer.team !== target.team) {
+      if (killer && target) {
+        const isFrag = killer.steamId !== target.steamId && killer.team !== target.team;
         const kill = kills.find(k => k.killer === newKill.killer && k.target === newKill.target);
 
         if (kill) return kill.count += 1;
@@ -64,6 +65,7 @@ schema.methods.addRound = async function (usersReports, timeIsUp) {
           user: killer,
           killer: newKill.killer,
           target: newKill.target,
+          isFrag,
           count: 1,
         });
       }
@@ -71,7 +73,9 @@ schema.methods.addRound = async function (usersReports, timeIsUp) {
   });
 
   kills = kills.filter(k => (k.count / reports.length) > 0.5);
-  kills.forEach(kill => (kill.user.frags += 1));
+  kills.forEach(kill => {
+    if (kill.isFrag) kill.user.frags += 1;
+  });
   kills = kills.map(k => ({ killer: k.killer, target: k.target }));
 
   const round = { kills };

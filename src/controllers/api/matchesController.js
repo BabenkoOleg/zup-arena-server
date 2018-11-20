@@ -1,8 +1,7 @@
-// const { User, Match, Sequelize } = require('../../db/models');
-const Match = require('../models/Match');
-const te = require('../util/throwErrorWithStatus');
-const aes = require('../util/aes');
-const logger = require('../util/logger');
+const Match = require('../../models/Match');
+const te = require('../../util/throwErrorWithStatus');
+const aes = require('../../util/aes');
+const logger = require('../../util/logger');
 
 /**
  * @api {post} /api/matches Request create Match

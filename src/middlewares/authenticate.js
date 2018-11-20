@@ -14,7 +14,9 @@ const extractToken = (request) => {
 };
 
 module.exports = async (request, response, next) => {
-  if (request.path.includes('/auth') || request.path.includes('/docs')) return next();
+  if (request.path.includes('/auth')
+      || request.path.includes('/docs')
+      || request.path.includes('/admin')) return next();
 
   try {
     const token = extractToken(request);
