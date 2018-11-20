@@ -12,6 +12,10 @@ module.exports.index = async (request, response) => {
   response.json({ data });
 };
 
+module.exports.test_steam_appid = async (request, response) => {
+  response.json({ appid: process.env.STEAM_APP_ID });
+};
+
 module.exports.show = async (request, response) => {
   try {
     const match = await Match.findById(request.params.id);
