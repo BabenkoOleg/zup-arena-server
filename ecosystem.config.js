@@ -34,7 +34,7 @@ module.exports = {
       host: '5.200.53.101',
       ref: 'origin/match-results-based-on-encrypted-reports',
       repo: 'git@github.com:BabenkoOleg/zup-arena-server.git',
-      path: '/home/deploy/zup-arena-server',
+      path: '/home/deploy/zup-arena/server',
       ssh_options: ['ForwardAgent=yes'],
       'post-deploy': '. ~/.zshrc ; npm install && cp ~/.env .env && pm2 reload ecosystem.config.js --env production',
     },
