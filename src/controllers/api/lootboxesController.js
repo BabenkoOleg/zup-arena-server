@@ -5,7 +5,7 @@ const te = require('../../util/throwErrorWithStatus');
  * @api {post} /api/lootboxes Request Lootboxes list
  * @apiName CreateMatch
  * @apiVersion 0.1.0
- * @apiGroup Match
+ * @apiGroup Lootbox
  *
  * @apiPermission Authorized users only
  * @apiHeader {String} Authorization Server-signed authentication token
