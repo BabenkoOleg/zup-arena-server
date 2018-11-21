@@ -3,7 +3,7 @@ const te = require('../../util/throwErrorWithStatus');
 
 /**
  * @api {post} /api/lootboxes Request Lootboxes list
- * @apiName CreateMatch
+ * @apiName GetLootboxes
  * @apiVersion 0.1.0
  * @apiGroup Lootbox
  *
