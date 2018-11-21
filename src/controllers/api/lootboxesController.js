@@ -14,7 +14,10 @@ const te = require('../../util/throwErrorWithStatus');
  *     "Authorization": "Bearer xxx.zzz.yyy"
  *   }
  *
- * @apiSuccess {String} id Unique match ID
+ * @apiSuccess {String} id Unique lootbox ID
+ * @apiSuccess {String} steamId ID in the Steam system
+ * @apiSuccess {String} name Name of lootbox
+ * @apiSuccess {Number} price Price
  *
  * @apiSuccessExample Success-Response:
  *   HTTP/1.1 200 OK
