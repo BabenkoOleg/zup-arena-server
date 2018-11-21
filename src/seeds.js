@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const loadVariables = require('./util/env');
 const initDb = require('./db');
 const logger = require('./util/logger');
