@@ -48,7 +48,7 @@ module.exports.index = async (request, response) => {
 };
 
 /**
- * @api {post} /api/lootboxes/:steamId/buy Request Buy lootbox
+ * @api {post} /api/lootboxes/:steamId Request Buy lootbox
  * @apiName BuyLootbox
  * @apiVersion 0.1.0
  * @apiGroup Lootbox
