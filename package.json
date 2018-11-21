@@ -21,6 +21,7 @@
   },
   "scripts": {
     "start": "node src/server.js",
+    "db-seeds": "node src/seeds.js",
     "watch-node": "nodemon src/server.js",
     "eslint": "eslint",
     "watch-eslint": "node node_modules/eslint-watch/bin/esw -w",
