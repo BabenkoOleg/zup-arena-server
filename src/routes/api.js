@@ -20,6 +20,7 @@ matchesRouter.post('/:id/round', matchesController.round);
 
 const lootboxesRouter = express.Router();
 lootboxesRouter.get('/', lootboxesController.index);
+lootboxesRouter.post('/:id', lootboxesController.buy);
 
 module.exports = [
   {

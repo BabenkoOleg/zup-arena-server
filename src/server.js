@@ -1,14 +1,16 @@
+const bodyParser = require('body-parser');
 const errorHandler = require('errorhandler');
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const loadVariables = require('./util/env');
+
+loadVariables();
+
 const initDb = require('./db');
 const logger = require('./util/logger');
 const authenticate = require('./middlewares/authenticate');
 const { requestLogger, responseLogger } = require('./util/morgan');
 
-loadVariables();
 initDb();
 
 const server = express();

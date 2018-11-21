@@ -46,3 +46,31 @@ module.exports.index = async (request, response) => {
     response.status(error.status || 500).json({ error: error.message });
   }
 };
+
+// ToDo: Add ApiDocs
+module.exports.buy = async (request, response) => {
+  const { currentUser } = request;
+
+  try {
+    const lootbox = await Lootbox.findOne({ steamId: request.params.id });
+    if (!lootbox) te(`Lootbox with steamId ${request.params.id} not found`, 404);
+
+    if (lootbox.price > currentUser.money) te('Not enough money', 422);
+
+    const steamResponse = await currentUser.addLootboxInSteam(lootbox.steamId);
+
+    const steamLootbox = JSON.parse(steamResponse.response.item_json)[0];
+
+    currentUser.money -= lootbox.price;
+    await currentUser.save();
+
+    response.json({
+      itemid: steamLootbox.itemid,
+      quantity: steamLootbox.quantity,
+      itemdefid: steamLootbox.itemdefid,
+      acquired: steamLootbox.acquired,
+    });
+  } catch (error) {
+    response.status(error.status || 500).json({ error: error.message });
+  }
+};

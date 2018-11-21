@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const SteamService = require('../services/Steam');
 
 const { Schema } = mongoose;
 
@@ -20,6 +21,17 @@ schema.methods.addAwards = async function (money, xp, frags) {
   this.matches += 1;
 
   await this.save();
+};
+
+schema.methods.addLootboxInSteam = async function (lootboxSteamId) {
+  const steamResponse = await SteamService.post('IInventoryService', 'AddItem', {
+    appid: process.env.STEAM_APP_ID,
+    steamid: this.steamId,
+    notify: 1,
+    'itemdefid[0]': lootboxSteamId,
+  });
+
+  return steamResponse;
 };
 
 const User = mongoose.model('User', schema);
