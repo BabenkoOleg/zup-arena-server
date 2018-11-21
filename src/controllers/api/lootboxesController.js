@@ -47,7 +47,30 @@ module.exports.index = async (request, response) => {
   }
 };
 
-// ToDo: Add ApiDocs
+/**
+ * @api {post} /api/lootboxes/:steamId/buy Request Buy lootbox
+ * @apiName BuyLootbox
+ * @apiVersion 0.1.0
+ * @apiGroup Lootbox
+ *
+ * @apiPermission Authorized users only
+ * @apiHeader {String} Authorization Server-signed authentication token
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     "Authorization": "Bearer xxx.zzz.yyy"
+ *   }
+ *
+ * @apiSuccess {String} itemid Unique item ID on Steam system
+ * @apiSuccess {String} itemdefid Unique item definition ID on Steam system
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *     {
+ *       "itemid": "1949392212715721368",
+ *       "itemdefid": "953",
+ *     }
+ */
+
 module.exports.buy = async (request, response) => {
   const { currentUser } = request;
 
