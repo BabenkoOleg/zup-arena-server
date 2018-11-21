@@ -3,6 +3,7 @@ const express = require('express');
 const authController = require('../controllers/api/authController');
 const profileController = require('../controllers/api/profileController');
 const matchesController = require('../controllers/api/matchesController');
+const lootboxesController = require('../controllers/api/lootboxesController');
 
 const authRouter = express.Router();
 authRouter.post('/', authController.create);
@@ -17,6 +18,9 @@ matchesRouter.get('/:id', matchesController.show);
 matchesRouter.get('/:id/credentials', matchesController.credentials);
 matchesRouter.post('/:id/round', matchesController.round);
 
+const lootboxesRouter = express.Router();
+lootboxesRouter.get('/', lootboxesController.index);
+
 module.exports = [
   {
     path: '/auth',
@@ -27,5 +31,8 @@ module.exports = [
   }, {
     path: '/matches',
     router: matchesRouter,
+  }, {
+    path: '/lootboxes',
+    router: lootboxesRouter,
   },
 ];
