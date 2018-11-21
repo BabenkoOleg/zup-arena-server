@@ -4,17 +4,20 @@ const { Schema } = mongoose;
 
 const schema = new Schema({
   steamId: String,
-  level: { type: Number, default: 0 },
   money: { type: Number, default: 0 },
-  rank: { type: Number, default: 0 },
   xp: { type: Number, default: 0 },
-  availableNewLootboxes: { type: Number, default: 0 },
+  level: { type: Number, default: 1 },
+  rank: { type: Number, default: 1 },
+  frags: { type: Number, default: 0 },
+  matches: { type: Number, default: 0 },
   activeMatch: { type: Schema.Types.ObjectId, ref: 'Match' },
 });
 
-schema.methods.addAwards = async function (money, xp) {
+schema.methods.addAwards = async function (money, xp, frags) {
   this.money += money;
   this.xp += xp;
+  this.frags += frags;
+  this.matches += 1;
 
   await this.save();
 };

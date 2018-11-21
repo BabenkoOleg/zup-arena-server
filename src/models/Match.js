@@ -111,7 +111,7 @@ schema.methods.finish = async function () {
     matchUser.awards = { money, xp };
 
     const user = await User.findOne({ steamId: matchUser.steamId });
-    await user.addAwards(money, xp);
+    await user.addAwards(money, xp, matchUser.frags);
   });
 
   await this.save();
