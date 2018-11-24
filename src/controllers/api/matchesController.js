@@ -156,9 +156,6 @@ module.exports.credentials = async (request, response) => {
 module.exports.round = async (request, response) => {
   try {
     const match = await Match.findById(request.params.id);
-    logger.info('--body--');
-    logger.info(JSON.stringify(request.body));
-    logger.info('--body--');
 
     const { reports } = request.body;
     const timeIsUp = request.body.timeIsUp || false;
@@ -170,7 +167,6 @@ module.exports.round = async (request, response) => {
 
     response.status(200).json({});
   } catch (error) {
-    logger.info(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };

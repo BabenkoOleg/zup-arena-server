@@ -7,23 +7,31 @@ const Lootbox = require('./models/Lootbox');
 loadVariables();
 initDb();
 
-const lootboxes = [
-  { steamId: 951, name: 'COLOR', price: 250 },
-  { steamId: 952, name: 'FACE', price: 500 },
-  { steamId: 953, name: 'HAT', price: 750 },
-  { steamId: 954, name: 'ACCESSORY', price: 500 },
-  { steamId: 955, name: 'EMOTION', price: 250 },
-  { steamId: 960, name: 'RARE', price: 5000 },
-];
+const seedLootboxes = async () => {
+  const lootboxes = [
+    { steamId: 951, reward: true, name: 'COLOR', price: 250 },
+    { steamId: 952, reward: true, name: 'FACE', price: 500 },
+    { steamId: 953, reward: true, name: 'HAT', price: 750 },
+    { steamId: 954, reward: true, name: 'ACCESSORY', price: 500 },
+    { steamId: 955, reward: true, name: 'EMOTION', price: 250 },
+    { steamId: 960, reward: false, name: 'RARE', price: 5000 },
+  ];
 
-lootboxes.forEach(async (lootbox) => {
-  const query = { name: lootbox.name };
-  const update = { price: lootbox.price, steamId: lootbox.steamId };
-  const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+  lootboxes.forEach(async (lootbox) => {
+    const query = { name: lootbox.name };
+    const update = { price: lootbox.price, steamId: lootbox.steamId, reward: lootbox.reward };
+    const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
-  try {
-    await Lootbox.findOneAndUpdate(query, update, options);
-  } catch (error) {
-    logger.error(error.message);
-  }
-});
+    try {
+      await Lootbox.findOneAndUpdate(query, update, options);
+    } catch (error) {
+      logger.error(error.message);
+    }
+  });
+};
+
+const run = async () => {
+  await seedLootboxes();
+};
+
+run();

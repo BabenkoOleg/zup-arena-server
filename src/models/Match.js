@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 const aes = require('../util/aes');
-const logger = require('../util/logger');
 
 const { Schema } = mongoose;
 
@@ -15,14 +14,8 @@ const schema = new Schema({
     frags: { type: Number, default: 0 },
     aes: { key: String, iv: String },
     awards: {
-      money: {
-        type: Number,
-        default: 0,
-      },
-      xp: {
-        type: Number,
-        default: 0,
-      },
+      money: { type: Number, default: 0 },
+      xp: { type: Number, default: 0 },
     },
   }],
   rounds: [{
@@ -45,8 +38,6 @@ schema.methods.addRound = async function (usersReports, timeIsUp) {
     const encrypted = rowParts[1];
     const user = this.users.find(u => u.steamId === steamId);
     const decrypted = aes.decrypt(encrypted, user.aes.key, user.aes.iv);
-
-    logger.info(decrypted);
 
     reports.push({ user, kills: JSON.parse(decrypted) });
   });
@@ -111,7 +102,7 @@ schema.methods.finish = async function () {
     matchUser.awards = { money, xp };
 
     const user = await User.findOne({ steamId: matchUser.steamId });
-    await user.addAwards(money, xp, matchUser.frags);
+    await user.addMatchAwards(money, xp, matchUser.frags);
   });
 
   await this.save();

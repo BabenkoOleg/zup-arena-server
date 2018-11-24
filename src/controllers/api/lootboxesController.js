@@ -2,7 +2,7 @@ const Lootbox = require('../../models/Lootbox');
 const te = require('../../util/throwErrorWithStatus');
 
 /**
- * @api {post} /api/lootboxes Request Lootboxes list
+ * @api {get} /api/lootboxes Request Lootboxes list
  * @apiName GetLootboxes
  * @apiVersion 0.1.0
  * @apiGroup Lootbox
@@ -80,7 +80,7 @@ module.exports.buy = async (request, response) => {
 
     if (lootbox.price > currentUser.money) te('Not enough money', 422);
 
-    const steamResponse = await currentUser.addLootboxInSteam(lootbox.steamId);
+    const steamResponse = await currentUser.addLootboxesInSteam([lootbox.steamId]);
 
     const steamLootbox = JSON.parse(steamResponse.response.item_json)[0];
 
