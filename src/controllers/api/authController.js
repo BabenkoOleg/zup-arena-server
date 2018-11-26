@@ -49,7 +49,7 @@ module.exports.create = async (request, response) => {
     const user = await User.findOneAndUpdate(query, {}, options);
 
     const payload = { steamId: user.steamId, id: user.id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 30 });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     response.json({ jwt: token });
   } catch (error) {
