@@ -41,12 +41,8 @@ schema.methods.addMatchAwards = async function (money, xp, frags) {
   }
 
   try {
-    if (this.steamId === '76561198338268835') {
-      await this.addLootboxesInSteam(lootboxSteamIds);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+    await this.addLootboxesInSteam(lootboxSteamIds);
+  } catch (error) { }
 
   await this.save();
 };
