@@ -29,23 +29,23 @@
     "game-server": "concurrently -k -p \"[{name}]\" -n \"EsLint,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-eslint\" \"npm run watch-game-server\""
   },
   "dependencies": {
-    "bluebird": "^3.5.2",
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^6.1.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.4",
-    "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.3.9",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.3.14",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.7",
     "steam-web-api2": "^2.0.3",
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "concurrently": "^4.0.1",
-    "eslint": "^5.7.0",
+    "concurrently": "^4.1.0",
+    "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-watch": "^4.0.2"
