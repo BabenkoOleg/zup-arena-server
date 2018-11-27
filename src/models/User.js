@@ -35,8 +35,8 @@ schema.methods.addMatchAwards = async function (money, xp, frags) {
       if (this.level > 100) this.level -= 100;
       if (this.level % 10 === 0) {
         lootboxSteamIds.push(lootboxes[Math.floor(Math.random() * lootboxes.length)].steamId);
-        if (this.rank < 30) this.rank += 1;
       }
+      if (this.level % 5 === 0 && this.rank < 30) this.rank += 1;
     }
   }
 
