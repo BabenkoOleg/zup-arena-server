@@ -1,9 +1,9 @@
 const express = require('express');
 
-const authController = require('../controllers/api/authController');
-const profileController = require('../controllers/api/profileController');
-const matchesController = require('../controllers/api/matchesController');
-const lootboxesController = require('../controllers/api/lootboxesController');
+const authController = require('./controllers/authorization');
+const profileController = require('./controllers/profile');
+const matchesController = require('./controllers/matches');
+const lootboxesController = require('./controllers/lootboxes');
 
 const authRouter = express.Router();
 authRouter.post('/', authController.create);

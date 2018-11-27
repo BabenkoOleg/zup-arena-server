@@ -1,6 +1,6 @@
-const Match = require('../../models/Match');
-const te = require('../../util/throwErrorWithStatus');
-const aes = require('../../util/aes');
+const Match = require('../../../models/Match');
+const te = require('../../../util/throwErrorWithStatus');
+const aes = require('../../../util/aes');
 
 /**
  * @api {post} /api/matches Request create Match

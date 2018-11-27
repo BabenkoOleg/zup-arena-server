@@ -20,12 +20,13 @@
     }
   },
   "scripts": {
-    "start": "node src/server.js",
     "db-seeds": "node src/seeds.js",
-    "watch-node": "nodemon src/server.js",
+    "watch-admin-server": "nodemon src/api/adminServer/index.js",
+    "watch-game-server": "nodemon src/api/gameServer/index.js",
     "eslint": "eslint",
     "watch-eslint": "node node_modules/eslint-watch/bin/esw -w",
-    "watch": "concurrently -k -p \"[{name}]\" -n \"EsLint,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-eslint\" \"npm run watch-node\""
+    "admin-server": "concurrently -k -p \"[{name}]\" -n \"EsLint,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-eslint\" \"npm run watch-admin-server\"",
+    "game-server": "concurrently -k -p \"[{name}]\" -n \"EsLint,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-eslint\" \"npm run watch-game-server\""
   },
   "dependencies": {
     "bluebird": "^3.5.2",

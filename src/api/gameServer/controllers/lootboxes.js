@@ -1,5 +1,5 @@
-const Lootbox = require('../../models/Lootbox');
-const te = require('../../util/throwErrorWithStatus');
+const Lootbox = require('../../../models/Lootbox');
+const te = require('../../../util/throwErrorWithStatus');
 
 /**
  * @api {get} /api/lootboxes Request Lootboxes list

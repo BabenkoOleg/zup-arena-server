@@ -1,5 +1,5 @@
-const Match = require('../../models/Match');
-const te = require('../../util/throwErrorWithStatus');
+const Match = require('../../../models/Match');
+const te = require('../../../util/throwErrorWithStatus');
 
 module.exports.index = async (request, response) => {
   const matches = await Match.find({}).sort('-createdAt');

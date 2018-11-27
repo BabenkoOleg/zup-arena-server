@@ -1,5 +1,5 @@
-const User = require('../../models/User');
-const te = require('../../util/throwErrorWithStatus');
+const User = require('../../../models/User');
+const te = require('../../../util/throwErrorWithStatus');
 
 module.exports.index = async (request, response) => {
   const users = await User.find({}).sort('-createdAt');

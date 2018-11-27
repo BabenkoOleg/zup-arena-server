@@ -1,7 +1,7 @@
 const express = require('express');
 
-const matchesController = require('../controllers/admin/matchesController');
-const usersController = require('../controllers/admin/usersController');
+const matchesController = require('./controllers/matches');
+const usersController = require('./controllers/users');
 
 const matchesRouter = express.Router();
 matchesRouter.get('/', matchesController.index);
