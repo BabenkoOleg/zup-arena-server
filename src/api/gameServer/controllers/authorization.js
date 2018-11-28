@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const SteamService = require('../../../services/Steam');
 const User = require('../../../models/User');
+const logger = require('../../../util/logger');
 const te = require('../../../util/throwErrorWithStatus');
 
 /**
@@ -40,6 +41,7 @@ module.exports.create = async (request, response) => {
     try {
       steamId = steamResponse.response.params.steamid;
     } catch (error) {
+      logger.error(error.message);
       te('Invalid steam authorization ticket', 422);
     }
 
@@ -53,6 +55,7 @@ module.exports.create = async (request, response) => {
 
     response.json({ jwt: token });
   } catch (error) {
+    logger.error(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };
@@ -69,6 +72,7 @@ module.exports.testUser = async (request, response) => {
 
     response.json({ jwt: token });
   } catch (error) {
+    logger.error(error.message);
     response.status(error.code || 500).json({ error: error.message });
   }
 };

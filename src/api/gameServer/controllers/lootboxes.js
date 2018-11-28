@@ -1,4 +1,5 @@
 const Lootbox = require('../../../models/Lootbox');
+const logger = require('../../../util/logger');
 const te = require('../../../util/throwErrorWithStatus');
 
 /**
@@ -43,6 +44,7 @@ module.exports.index = async (request, response) => {
 
     response.json(data);
   } catch (error) {
+    logger.error(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };
@@ -94,6 +96,7 @@ module.exports.buy = async (request, response) => {
       acquired: steamLootbox.acquired,
     });
   } catch (error) {
+    logger.error(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };

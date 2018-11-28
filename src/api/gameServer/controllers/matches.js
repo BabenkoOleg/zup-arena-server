@@ -1,5 +1,6 @@
 const Match = require('../../../models/Match');
 const te = require('../../../util/throwErrorWithStatus');
+const logger = require('../../../util/logger');
 const aes = require('../../../util/aes');
 
 /**
@@ -55,6 +56,7 @@ module.exports.create = async (request, response) => {
 
     response.json({ id: match.id });
   } catch (error) {
+    logger.error(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };
@@ -98,6 +100,7 @@ module.exports.credentials = async (request, response) => {
       iv: aes.hexWithDashes(user.aes.iv),
     });
   } catch (error) {
+    logger.error(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };
@@ -166,6 +169,7 @@ module.exports.round = async (request, response) => {
 
     response.status(200).json({});
   } catch (error) {
+    logger.error(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };
@@ -176,6 +180,7 @@ module.exports.show = async (request, response) => {
     if (!match) te(`Match with id ${request.params.id} not found`, 404);
     response.status(200).json(match);
   } catch (error) {
+    logger.error(error.message);
     response.status(error.status || 500).json({ error: error.message });
   }
 };
