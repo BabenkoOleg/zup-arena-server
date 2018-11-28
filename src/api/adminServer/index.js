@@ -2,15 +2,16 @@ const bodyParser = require('body-parser');
 const errorHandler = require('errorhandler');
 const express = require('express');
 const cors = require('cors');
+const ENV = require('../../util/env');
+
+ENV.load();
+
 const logger = require('../../util/logger');
 // const authenticate = require('./middlewares/authenticate');
 const { requestLogger, responseLogger } = require('../../util/morgan');
 const DB = require('../../db');
-const ENV = require('../../util/env');
 
 const run = async () => {
-  ENV.load();
-
   const db = new DB(process.env.MONGODB_URI + process.env.MONGODB_DATABASE);
 
   const server = express();
