@@ -13,11 +13,11 @@ usersRouter.get('/:id', usersController.show);
 
 module.exports = [
   {
-    path: '/admin/matches',
+    path: '/matches',
     router: matchesRouter,
   },
   {
-    path: '/admin/users',
+    path: '/users',
     router: usersRouter,
   },
 ];
