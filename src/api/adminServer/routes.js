@@ -1,7 +1,11 @@
 const express = require('express');
 
+const authorizationController = require('./controllers/authorization');
 const matchesController = require('./controllers/matches');
 const usersController = require('./controllers/users');
+
+const authorizationRouter = express.Router();
+authorizationRouter.post('/', authorizationController.create);
 
 const matchesRouter = express.Router();
 matchesRouter.get('/', matchesController.index);
@@ -12,6 +16,10 @@ usersRouter.get('/', usersController.index);
 usersRouter.get('/:id', usersController.show);
 
 module.exports = [
+  {
+    path: '/auth',
+    router: authorizationRouter,
+  },
   {
     path: '/matches',
     router: matchesRouter,
