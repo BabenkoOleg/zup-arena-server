@@ -1,13 +1,13 @@
 const express = require('express');
 
-const authController = require('./controllers/authorization');
+const authorizationController = require('./controllers/authorization');
 const profileController = require('./controllers/profile');
 const matchesController = require('./controllers/matches');
 const lootboxesController = require('./controllers/lootboxes');
 
-const authRouter = express.Router();
-authRouter.post('/', authController.create);
-authRouter.get('/test-user/:id', authController.testUser);
+const authorizationRouter = express.Router();
+authorizationRouter.post('/', authorizationController.create);
+authorizationRouter.get('/test-user/:id', authorizationController.testUser);
 
 const profileRouter = express.Router();
 profileRouter.get('/', profileController.show);
@@ -25,14 +25,17 @@ lootboxesRouter.post('/:id', lootboxesController.buy);
 module.exports = [
   {
     path: '/auth',
-    router: authRouter,
-  }, {
+    router: authorizationRouter,
+  },
+  {
     path: '/profile',
     router: profileRouter,
-  }, {
+  },
+  {
     path: '/matches',
     router: matchesRouter,
-  }, {
+  },
+  {
     path: '/lootboxes',
     router: lootboxesRouter,
   },
