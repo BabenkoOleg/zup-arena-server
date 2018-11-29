@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const te = require('../util/throwErrorWithStatus');
+const Admin = require('../../../models/Admin');
+const te = require('../../../util/throwErrorWithStatus');
 
 const extractToken = (request) => {
   const jwtHeader = request.get('Authorization');
@@ -14,9 +14,7 @@ const extractToken = (request) => {
 };
 
 module.exports = async (request, response, next) => {
-  if (request.path.includes('/auth')
-      || request.path.includes('/docs')
-      || request.path.includes('/admin')) return next();
+  if (request.path.includes('/auth')) return next();
 
   try {
     const token = extractToken(request);
@@ -30,8 +28,8 @@ module.exports = async (request, response, next) => {
       te(message, 401);
     }
 
-    const user = await User.findById(decoded.id).populate('activeMatch', 'id').exec();
-    request.currentUser = user;
+    const admin = await Admin.findById(decoded.id);
+    request.currentAdmin = admin;
     next();
   } catch (error) {
     response.status(error.status || 500).json({ error: error.message });

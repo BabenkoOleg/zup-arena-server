@@ -7,7 +7,7 @@ const ENV = require('../../util/env');
 ENV.load();
 
 const logger = require('../../util/logger');
-// const authenticate = require('./middlewares/authenticate');
+const authenticate = require('./middlewares/authenticate');
 const { requestLogger, responseLogger } = require('../../util/morgan');
 const DB = require('../../db');
 
@@ -19,7 +19,7 @@ const run = async () => {
   server.use(cors());
   server.use(bodyParser.json());
   server.use(requestLogger);
-  // server.use(authenticate);
+  server.use(authenticate);
   server.use(responseLogger);
   server.set('port', process.env.ADMIN_SERVER_PORT || 3030);
 
