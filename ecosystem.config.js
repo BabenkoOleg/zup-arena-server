@@ -1,5 +1,5 @@
 const options = {
-  interpreter: 'node@11.1.0',
+  interpreter: 'node@11.2.0',
   instances: 1,
   autorestart: true,
   watch: false,
