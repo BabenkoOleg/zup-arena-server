@@ -8,6 +8,7 @@ ENV.load();
 
 const logger = require('../../util/logger');
 const authenticate = require('./middlewares/authenticate');
+const apiLogger = require('./middlewares/apiLogger');
 const { requestLogger, responseLogger } = require('../../util/morgan');
 const DB = require('../../db');
 
@@ -18,6 +19,7 @@ const run = async () => {
   server.use(errorHandler());
   server.use(cors());
   server.use(bodyParser.json());
+  server.use(apiLogger);
   server.use(requestLogger);
   server.use(authenticate);
   server.use(responseLogger);
