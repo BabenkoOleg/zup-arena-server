@@ -12,17 +12,37 @@ const schema = new Schema({
     team: Number,
     left: { type: Boolean, default: false },
     isWinner: { type: Boolean, default: false },
-    frags: { type: Number, default: 0 },
-    aes: { key: String, iv: String },
+    frags: {
+      approved: { type: Number, default: 0 },
+      forfeits: { type: Number, default: 0 },
+      suicides: { type: Number, default: 0 },
+    },
+    aes: {
+      key: String,
+      iv: String,
+    },
     awards: {
-      money: { type: Number, default: 0 },
-      xp: { type: Number, default: 0 },
+      money: {
+        total: { type: Number, default: 0 },
+        victory: { type: Number, default: 0 },
+        defeat: { type: Number, default: 0 },
+        frags: { type: Number, default: 0 },
+      },
+      xp: {
+        total: { type: Number, default: 0 },
+        victory: { type: Number, default: 0 },
+        defeat: { type: Number, default: 0 },
+        frags: { type: Number, default: 0 },
+      },
     },
   }],
   rounds: [{
     winningTeams: { type: Array, default: [] },
     timeIsUp: { type: Boolean, default: false },
-    kills: [{ killer: String, target: String }],
+    kills: [{
+      killer: String,
+      target: String,
+    }],
   }],
   winningTeams: { type: Array, default: [] },
 }, {
@@ -47,37 +67,39 @@ schema.methods.addRound = async function (request, usersReports, timeIsUp) {
 
   reports.forEach((report) => {
     report.kills.forEach((newKill) => {
+      const uid = `${newKill.killer}#${newKill.target}`;
+      const kill = kills.find(k => k.uid === uid);
+
+      if (kill) return kill.confirmations += 1;
+
       const killer = this.users.find(u => u.steamId === newKill.killer);
       const target = this.users.find(u => u.steamId === newKill.target);
 
-      if (killer && target) {
-        const isFrag = killer.steamId !== target.steamId && killer.team !== target.team;
-        const kill = kills.find(k => k.killer === newKill.killer && k.target === newKill.target);
+      let kind = 'approved';
+      if (killer.team === target.team) kind = 'forfeits';
+      if (killer.steamId === target.steamId) kind = 'suicides';
 
-        if (kill) return kill.count += 1;
-
-        kills.push({
-          user: killer,
-          killer: newKill.killer,
-          target: newKill.target,
-          isFrag,
-          count: 1,
-        });
-      }
+      kills.push({
+        uid,
+        user: killer,
+        killer: newKill.killer,
+        target: newKill.target,
+        kind,
+        confirmations: 1,
+      });
     });
   });
 
-  kills = kills.filter(k => (k.count / reports.length) > 0.5);
-  kills.forEach(kill => {
-    if (kill.isFrag) kill.user.frags += 1;
-  });
-  kills = kills.map(k => ({ killer: k.killer, target: k.target }));
+  kills = kills.filter(k => (k.confirmations / reports.length) > 0.5);
+  kills.forEach(kill => kill.user.frags[kill.kind] += 1);
 
-  const round = { kills, timeIsUp };
+  const round = { kills: kills.map(k => ({ killer: k.killer, target: k.target })), timeIsUp };
 
   if (!timeIsUp) {
     const killed = kills.map(kill => kill.target);
-    const winningTeams = this.users.filter(u => !killed.includes(u.steamId)).map(u => u.team);
+    const winningTeams = this.users
+      .filter(user => !killed.includes(user.steamId) && !user.left)
+      .map(user => user.team);
 
     round.winningTeams = [...new Set(winningTeams)];
   }
@@ -102,11 +124,23 @@ schema.methods.finish = async function () {
     mUser.isWinner = isWinner;
 
     if (!mUser.left) {
-      mUser.awards.money = (isWinner ? (200 / this.winningTeams.length) : 50) + mUser.frags * 10;
-      mUser.awards.xp = (isWinner ? (150 / this.winningTeams.length) : 50) + mUser.frags * 10;
+      let frags = mUser.frags.approved - mUser.frags.forfeits;
+      if (frags < 0) frags = 0;
+
+      const { money, xp } = mUser.awards;
+
+      money.victory = isWinner ? (200 / this.winningTeams.length) : 0;
+      money.defeat = isWinner ? 0 : 50;
+      money.frags = frags * 10;
+      money.total = money.victory + money.defeat + money.frags;
+
+      xp.victory = isWinner ? (150 / this.winningTeams.length) : 0;
+      xp.defeat = isWinner ? 0 : 50;
+      xp.frags = frags * 10;
+      xp.total = xp.victory + xp.defeat + xp.frags;
 
       const user = await User.findOne({ steamId: mUser.steamId });
-      await user.addMatchAwards(mUser.awards.money, mUser.awards.xp, mUser.frags);
+      await user.addMatchAwards(mUser.awards.money.total, mUser.awards.xp.total, mUser.frags);
     }
   });
 

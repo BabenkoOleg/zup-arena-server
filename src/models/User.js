@@ -11,15 +11,23 @@ const schema = new Schema({
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 },
   rank: { type: Number, default: 1 },
-  frags: { type: Number, default: 0 },
+  frags: {
+    approved: { type: Number, default: 0 },
+    forfeits: { type: Number, default: 0 },
+    suicides: { type: Number, default: 0 },
+  },
   matches: { type: Number, default: 0 },
   activeMatch: { type: Schema.Types.ObjectId, ref: 'Match' },
 });
 
 schema.methods.addMatchAwards = async function (money, xp, frags) {
-  this.money += money;
-  this.xp += xp;
-  this.frags += frags;
+  this.money += Math.floor(money);
+  this.xp += Math.floor(xp);
+
+  this.frags.approved += frags.approved;
+  this.frags.forfeits += frags.forfeits;
+  this.frags.suicides += frags.suicides;
+
   this.matches += 1;
 
   const normalizedXp = this.xp % MAX_XP;
