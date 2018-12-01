@@ -26,10 +26,8 @@ module.exports.show = async (request, response) => {
         team: user.team,
         isWinner: user.isWinner,
         frags: user.frags,
-        awards: {
-          money: user.awards.money,
-          xp: user.awards.xp,
-        },
+        left: user.left,
+        awards: user.awards,
       })),
       rounds: match.rounds.map((round, i) => ({
         number: (i + 1),
