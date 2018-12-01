@@ -29,7 +29,7 @@ const schema = new Schema({
   timestamps: true,
 });
 
-schema.methods.addRound = async function (usersReports, timeIsUp) {
+schema.methods.addRound = async function (request, usersReports, timeIsUp) {
   const reports = [];
   let kills = [];
 
@@ -42,6 +42,8 @@ schema.methods.addRound = async function (usersReports, timeIsUp) {
 
     reports.push({ user, kills: JSON.parse(decrypted) });
   });
+
+  request.body.decryptedReports = reports.map(r => ({ user: r.user.steamId, kills: r.kills }));
 
   reports.forEach((report) => {
     report.kills.forEach((newKill) => {

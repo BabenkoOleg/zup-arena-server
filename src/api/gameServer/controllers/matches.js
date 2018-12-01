@@ -211,7 +211,7 @@ module.exports.round = async (request, response) => {
     const timeIsUp = request.body.timeIsUp || false;
     const finish = request.body.finish || false;
 
-    await match.addRound(reports, timeIsUp);
+    await match.addRound(request, reports, timeIsUp);
 
     if (finish) await match.finish();
 
