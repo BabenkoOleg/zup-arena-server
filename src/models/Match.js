@@ -10,6 +10,7 @@ const schema = new Schema({
   users: [{
     steamId: String,
     team: Number,
+    left: { type: Boolean, default: false },
     isWinner: { type: Boolean, default: false },
     frags: { type: Number, default: 0 },
     aes: { key: String, iv: String },
@@ -93,16 +94,18 @@ schema.methods.finish = async function () {
   const maxWinsCount = Math.max(...winsByTeam.values());
   this.winningTeams = [...winsByTeam.keys()].filter(key => winsByTeam.get(key) === maxWinsCount);
 
-  this.users.forEach(async (matchUser) => {
-    const isWinner = this.winningTeams.includes(matchUser.team);
-    const money = (isWinner ? (200 / this.winningTeams.length) : 50) + matchUser.frags * 10;
-    const xp = (isWinner ? (150 / this.winningTeams.length) : 50) + matchUser.frags * 10;
+  this.users.forEach(async (mUser) => {
+    const isWinner = this.winningTeams.includes(mUser.team);
 
-    matchUser.isWinner = isWinner;
-    matchUser.awards = { money, xp };
+    mUser.isWinner = isWinner;
 
-    const user = await User.findOne({ steamId: matchUser.steamId });
-    await user.addMatchAwards(money, xp, matchUser.frags);
+    if (!mUser.left) {
+      mUser.awards.money = (isWinner ? (200 / this.winningTeams.length) : 50) + mUser.frags * 10;
+      mUser.awards.xp = (isWinner ? (150 / this.winningTeams.length) : 50) + mUser.frags * 10;
+
+      const user = await User.findOne({ steamId: mUser.steamId });
+      await user.addMatchAwards(mUser.awards.money, mUser.awards.xp, mUser.frags);
+    }
   });
 
   await this.save();

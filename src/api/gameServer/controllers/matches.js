@@ -106,6 +106,54 @@ module.exports.credentials = async (request, response) => {
 };
 
 /**
+ * @api {post} /api/matches/:id/leave Report the player's exit from the match
+ * @apiName Leave
+ * @apiDescription Report the player's exit from the match
+ * @apiVersion 0.1.0
+ * @apiGroup Match
+ *
+ * @apiPermission Authorized users only
+ * @apiHeader {String} Authorization Server-signed authentication token
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     "Authorization": "Bearer xxx.zzz.yyy"
+ *   }
+ *
+ * @apiParam {String} user SteamId of the player who left the match
+ *
+ * @apiParamExample {json} Request-Example
+ *   {
+ *     "user": "00000000000000000"
+ *   }
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ */
+
+module.exports.leave = async (request, response) => {
+  try {
+    const match = await Match.findById(request.params.id);
+    if (!match) te(`Match with id ${request.params.id} not found`, 404);
+
+    if (!request.body.user) {
+      te('User not provided', 422);
+    }
+
+    const user = match.users.find(u => u.steamId === request.body.user);
+    if (!user) te(`User with steamId ${request.body.user} not found in this match`, 404);
+
+    user.left = true;
+
+    await match.save();
+
+    response.status(200).json({});
+  } catch (error) {
+    logger.error(error.message);
+    response.status(error.status || 500).json({ error: error.message });
+  }
+};
+
+/**
  * @api {post} /api/matches/:id/round Report the new round
  * @apiName NextRound
  * @apiDescription Report the end of the current round and the beginning of a new one.
