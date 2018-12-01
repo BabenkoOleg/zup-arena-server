@@ -1,8 +1,13 @@
 const express = require('express');
 
+const apiLogsController = require('./controllers/apiLogs');
 const authorizationController = require('./controllers/authorization');
 const matchesController = require('./controllers/matches');
 const usersController = require('./controllers/users');
+
+const apiLogsRouter = express.Router();
+apiLogsRouter.get('/', apiLogsController.index);
+apiLogsRouter.get('/:id', apiLogsController.show);
 
 const authorizationRouter = express.Router();
 authorizationRouter.post('/', authorizationController.create);
@@ -16,6 +21,10 @@ usersRouter.get('/', usersController.index);
 usersRouter.get('/:id', usersController.show);
 
 module.exports = [
+  {
+    path: '/api-logs',
+    router: apiLogsRouter,
+  },
   {
     path: '/auth',
     router: authorizationRouter,
