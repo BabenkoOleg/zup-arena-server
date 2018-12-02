@@ -41,10 +41,12 @@ module.exports.create = async (request, response) => {
     const usersList = request.body.users;
     const users = [];
 
+    const teamNames = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
     usersList.forEach((list, index) => {
       list.forEach(steamId => users.push({
         steamId,
-        team: index,
+        team: teamNames[index],
         aes: {
           key: aes.randomAesKey(),
           iv: aes.randomAesIv(),

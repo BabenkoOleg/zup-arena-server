@@ -9,7 +9,7 @@ const schema = new Schema({
   finishedAt: { type: Date, default: null },
   users: [{
     steamId: String,
-    team: Number,
+    team: String,
     left: { type: Boolean, default: false },
     isWinner: { type: Boolean, default: false },
     frags: {
