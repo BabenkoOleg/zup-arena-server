@@ -17,7 +17,7 @@ module.exports.create = async (request, response) => {
 
     if (isPasswordValid) {
       const payload = { id: admin.id, login: admin.login };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '6h' });
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
       response.json({ jwt: token });
     } else {
       te('Invalid login or password', 422);
