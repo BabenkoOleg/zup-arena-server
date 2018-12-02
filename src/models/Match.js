@@ -113,8 +113,13 @@ schema.methods.finish = async function () {
   this.state = 'finished';
   this.finishedAt = Date.now();
 
-  const wins = this.rounds.map(round => round.winningTeams).flat();
-  const winsByTeam = wins.reduce((acc, val) => acc.set(val, acc.get(val) + 1 || 1), new Map());
+  const allWins = this.rounds.map(round => round.winningTeams).flat();
+  const awardedTeams = allWins
+    .filter(i => this.users.filter(u => u.team === i && u.left === false).length > 0);
+
+  const winsByTeam = awardedTeams
+    .reduce((acc, val) => acc.set(val, acc.get(val) + 1 || 1), new Map());
+
   const maxWinsCount = Math.max(...winsByTeam.values());
   this.winningTeams = [...winsByTeam.keys()].filter(key => winsByTeam.get(key) === maxWinsCount);
 
