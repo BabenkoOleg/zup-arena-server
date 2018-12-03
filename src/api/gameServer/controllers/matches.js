@@ -1,5 +1,4 @@
 const Match = require('../../../models/Match');
-const User = require('../../../models/User');
 const te = require('../../../util/throwErrorWithStatus');
 const logger = require('../../../util/logger');
 const aes = require('../../../util/aes');
