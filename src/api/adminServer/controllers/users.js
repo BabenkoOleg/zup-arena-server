@@ -2,17 +2,17 @@ const User = require('../../../models/User');
 const te = require('../../../util/throwErrorWithStatus');
 
 module.exports.index = async (request, response) => {
-  const users = await User.find({}).sort('-createdAt');
+  const users = await User.find({}).sort('-level');
   const data = users.map(user => ({
     steamId: user.steamId,
+    steamName: user.steamName,
     level: user.level,
     rank: user.rank,
     money: user.money,
+    frags: user.frags.enemies,
     xp: user.xp,
     banned: user.banned,
-    frags: user.frags,
-    matches: user.matches,
-    activeMatch: user.activeMatch,
+    matches: user.matches.victories + user.matches.defeats,
   }));
 
   response.json({ data });
