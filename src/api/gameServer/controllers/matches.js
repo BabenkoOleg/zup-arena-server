@@ -44,14 +44,10 @@ module.exports.create = async (request, response) => {
 
     const teamNames = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    const serverUsers = await User.find({ steamId: usersList.flat() });
-
     usersList.forEach((list, index) => {
       list.forEach(steamId => {
-        const user = serverUsers.find(u => u.steamId === steamId);
         users.push({
           steamId,
-          steamName: user.steamName,
           team: teamNames[index],
           aes: {
             key: aes.randomAesKey(),
