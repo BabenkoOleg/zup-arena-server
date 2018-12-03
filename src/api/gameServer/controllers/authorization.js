@@ -54,16 +54,14 @@ module.exports.create = async (request, response) => {
     user.lastActivityAt = now;
     user.lastLoginAt = now;
 
-    if (user && (!user.steamAvatarUrl || !user.steamPersonaName)) {
-      try {
-        steamResponse = await SteamService.ISteamUser.GetPlayerSummaries({
-          steamids: steamId,
-        });
-        user.steamName = steamResponse.response.players.player[0].personaname;
-        user.steamAvatar = steamResponse.response.players.player[0].avatarfull;
-        user.steamCountryCode = steamResponse.response.players.player[0].loccountrycode;
-      } catch (error) { }
-    }
+    try {
+      steamResponse = await SteamService.ISteamUser.GetPlayerSummaries({
+        steamids: steamId,
+      });
+      user.steamName = steamResponse.response.players.player[0].personaname;
+      user.steamAvatar = steamResponse.response.players.player[0].avatarfull;
+      user.steamCountryCode = steamResponse.response.players.player[0].loccountrycode;
+    } catch (error) { }
 
     await user.save();
 
