@@ -1,4 +1,5 @@
 const Match = require('../../../models/Match');
+const User = require('../../../models/User');
 const te = require('../../../util/throwErrorWithStatus');
 const logger = require('../../../util/logger');
 const aes = require('../../../util/aes');
@@ -43,15 +44,21 @@ module.exports.create = async (request, response) => {
 
     const teamNames = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+    const serverUsers = await User.find({ steamId: usersList.flat() });
+
     usersList.forEach((list, index) => {
-      list.forEach(steamId => users.push({
-        steamId,
-        team: teamNames[index],
-        aes: {
-          key: aes.randomAesKey(),
-          iv: aes.randomAesIv(),
-        },
-      }));
+      list.forEach(steamId => {
+        const user = serverUsers.find(u => u.steamId === steamId);
+        users.push({
+          steamId,
+          steamName: user.steamName,
+          team: teamNames[index],
+          aes: {
+            key: aes.randomAesKey(),
+            iv: aes.randomAesIv(),
+          },
+        });
+      });
     });
 
     const match = await Match.create({ users, rounds: [] });

@@ -9,6 +9,7 @@ const schema = new Schema({
   finishedAt: { type: Date, default: null },
   users: [{
     steamId: String,
+    steamName: String,
     team: String,
     deserter: { type: Boolean, default: false },
     isWinner: { type: Boolean, default: false },
