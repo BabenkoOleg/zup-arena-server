@@ -9,6 +9,7 @@ module.exports.index = async (request, response) => {
     rank: user.rank,
     money: user.money,
     xp: user.xp,
+    banned: user.banned,
     frags: user.frags,
     matches: user.matches,
     activeMatch: user.activeMatch,

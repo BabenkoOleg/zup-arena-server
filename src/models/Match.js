@@ -53,6 +53,8 @@ schema.methods.addRound = async function (request, usersReports, timeIsUp) {
   const reports = [];
   let kills = [];
 
+  request.body.decryptedReports = [];
+
   usersReports.forEach((row) => {
     const rowParts = row.split('#');
     const steamId = rowParts[0];
@@ -60,10 +62,12 @@ schema.methods.addRound = async function (request, usersReports, timeIsUp) {
     const user = this.users.find(u => u.steamId === steamId);
     const decrypted = aes.decrypt(encrypted, user.aes.key, user.aes.iv);
 
+    request.body.decryptedReports.push({ user: user.steamId, report: decrypted });
+
     reports.push({ user, kills: JSON.parse(decrypted) });
   });
 
-  request.body.decryptedReports = reports.map(r => ({ user: r.user.steamId, kills: r.kills }));
+  request.body.parsedReports = reports.map(r => ({ user: r.user.steamId, kills: r.kills }));
 
   reports.forEach((report) => {
     report.kills.forEach((newKill) => {

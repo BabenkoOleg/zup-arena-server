@@ -7,6 +7,7 @@ const { Schema } = mongoose;
 
 const schema = new Schema({
   steamId: String,
+  banned: { type: Boolean, default: false },
   money: { type: Number, default: 0 },
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 },
