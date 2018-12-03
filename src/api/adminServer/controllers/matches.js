@@ -23,6 +23,7 @@ module.exports.show = async (request, response) => {
       createdAt: match.createdAt,
       users: match.users.map(user => ({
         steamId: user.steamId,
+        steamName: user.steamName,
         team: user.team,
         isWinner: user.isWinner,
         frags: user.frags,
