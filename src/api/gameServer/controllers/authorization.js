@@ -31,7 +31,7 @@ module.exports.create = async (request, response) => {
   try {
     if (!request.body.ticket) te('Authorization ticket is not provided in the request body', 422);
 
-    const steamResponse = await SteamService.ISteamUserAuth.AuthenticateUserTicket({
+    let steamResponse = await SteamService.ISteamUserAuth.AuthenticateUserTicket({
       appid: process.env.STEAM_APP_ID,
       ticket: request.body.ticket,
     });
@@ -49,6 +49,23 @@ module.exports.create = async (request, response) => {
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
     const user = await User.findOneAndUpdate(query, {}, options);
+
+    const now = Date.now();
+    user.lastActivityAt = now;
+    user.lastLoginAt = now;
+
+    if (user && (!user.steamAvatarUrl || !user.steamPersonaName)) {
+      try {
+        steamResponse = await SteamService.ISteamUser.GetPlayerSummaries({
+          steamids: steamId,
+        });
+        user.steamName = steamResponse.response.players.player[0].personaname;
+        user.steamAvatar = steamResponse.response.players.player[0].avatarfull;
+        user.steamCountryCode = steamResponse.response.players.player[0].loccountrycode;
+      } catch (error) { }
+    }
+
+    await user.save();
 
     const payload = { steamId: user.steamId, id: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });

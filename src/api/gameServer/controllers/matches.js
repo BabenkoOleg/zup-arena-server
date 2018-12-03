@@ -108,8 +108,8 @@ module.exports.credentials = async (request, response) => {
 };
 
 /**
- * @api {post} /api/matches/:id/leave Report the player's exit from the match
- * @apiName Leave
+ * @api {post} /api/matches/:id/deserter Report the player's exit from the match
+ * @apiName Deserter
  * @apiDescription Report the player's exit from the match
  * @apiVersion 0.1.0
  * @apiGroup Match
@@ -132,7 +132,7 @@ module.exports.credentials = async (request, response) => {
  *   HTTP/1.1 200 OK
  */
 
-module.exports.leave = async (request, response) => {
+module.exports.deserter = async (request, response) => {
   try {
     const match = await Match.findById(request.params.id);
     if (!match) te(`Match with id ${request.params.id} not found`, 404);
@@ -144,7 +144,7 @@ module.exports.leave = async (request, response) => {
     const user = match.users.find(u => u.steamId === request.body.user);
     if (!user) te(`User with steamId ${request.body.user} not found in this match`, 404);
 
-    user.left = true;
+    user.deserter = true;
 
     await match.save();
 

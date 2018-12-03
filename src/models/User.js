@@ -13,23 +13,33 @@ const schema = new Schema({
   level: { type: Number, default: 1 },
   rank: { type: Number, default: 1 },
   frags: {
-    approved: { type: Number, default: 0 },
-    forfeits: { type: Number, default: 0 },
+    enemies: { type: Number, default: 0 },
+    teammates: { type: Number, default: 0 },
     suicides: { type: Number, default: 0 },
   },
-  matches: { type: Number, default: 0 },
+  matches: {
+    victories: { type: Number, default: 0 },
+    defeats: { type: Number, default: 0 },
+  },
   activeMatch: { type: Schema.Types.ObjectId, ref: 'Match' },
+  lastLoginAt: Date,
+  lastActivityAt: Date,
+  desertions: { type: Number, default: 0 },
+  steamName: String,
+  steamAvatar: String,
+  steamCountryCode: String,
 });
 
-schema.methods.addMatchAwards = async function (money, xp, frags) {
+schema.methods.addMatchAwards = async function (money, xp, frags, isWinner) {
   this.money += Math.floor(money);
   this.xp += Math.floor(xp);
 
-  this.frags.approved += frags.approved;
-  this.frags.forfeits += frags.forfeits;
+  this.frags.enemies += frags.enemies;
+  this.frags.teammates += frags.teammates;
   this.frags.suicides += frags.suicides;
 
-  this.matches += 1;
+  const field = isWinner ? 'victories' : 'defeats';
+  this.matches[field] += 1;
 
   const normalizedXp = this.xp % MAX_XP;
   const newLevel = LEVELS_MAP.find(level => normalizedXp >= level.min && normalizedXp <= level.max);

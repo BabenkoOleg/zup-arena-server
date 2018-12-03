@@ -17,7 +17,7 @@ matchesRouter.post('/', matchesController.create);
 matchesRouter.get('/:id', matchesController.show);
 matchesRouter.get('/:id/credentials', matchesController.credentials);
 matchesRouter.post('/:id/round', matchesController.round);
-matchesRouter.post('/:id/leave', matchesController.leave);
+matchesRouter.post('/:id/deserter', matchesController.deserter);
 
 const lootboxesRouter = express.Router();
 lootboxesRouter.get('/', lootboxesController.index);
