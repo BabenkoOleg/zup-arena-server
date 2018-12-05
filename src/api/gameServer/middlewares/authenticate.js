@@ -29,6 +29,9 @@ module.exports = async (request, response, next) => {
     }
 
     const user = await User.findById(decoded.id).populate('activeMatch', 'id').exec();
+
+    if (user.banned) te('Banned', 401);
+
     request.currentUser = user;
     next();
   } catch (error) {

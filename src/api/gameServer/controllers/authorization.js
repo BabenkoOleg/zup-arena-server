@@ -50,6 +50,8 @@ module.exports.create = async (request, response) => {
 
     const user = await User.findOneAndUpdate(query, {}, options);
 
+    if (user.banned) te('Banned', 401);
+
     const now = Date.now();
     user.lastActivityAt = now;
     user.lastLoginAt = now;
@@ -82,12 +84,14 @@ module.exports.testUser = async (request, response) => {
   try {
     const user = await User.findOneAndUpdate(query, {}, options);
 
+    if (user.banned) te('Banned', 401);
+
     const payload = { steamId: user.steamId, id: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     response.json({ jwt: token });
   } catch (error) {
     logger.error(error.message);
-    response.status(error.code || 500).json({ error: error.message });
+    response.status(error.status || 500).json({ error: error.message });
   }
 };
