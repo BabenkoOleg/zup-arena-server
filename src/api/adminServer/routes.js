@@ -19,6 +19,7 @@ matchesRouter.get('/:id', matchesController.show);
 const usersRouter = express.Router();
 usersRouter.get('/', usersController.index);
 usersRouter.get('/:id', usersController.show);
+usersRouter.put('/:id', usersController.update);
 
 module.exports = [
   {
