@@ -23,6 +23,7 @@ module.exports.show = async (request, response) => {
     const user = await User.findOne({ steamId: request.params.id });
     if (!user) te(`User with steamId ${request.params.id} not found`, 404);
 
+    const fragsTotal = user.frags.enemies + user.frags.teammates + user.frags.suicides;
     const matchesTotal = user.matches.victories + user.matches.defeats;
     const matchesWinningPercentage = user.matches.victories / matchesTotal * 100;
 
@@ -37,6 +38,7 @@ module.exports.show = async (request, response) => {
       level: user.level,
       rank: user.rank,
       frags: {
+        total: fragsTotal,
         enemies: user.frags.enemies,
         teammates: user.frags.teammates,
         suicides: user.frags.suicides,
