@@ -15,6 +15,12 @@ authorizationRouter.post('/', authorizationController.create);
 
 const lootboxesRouter = express.Router();
 lootboxesRouter.get('/', lootboxesController.index);
+lootboxesRouter.get('/new', lootboxesController.new);
+lootboxesRouter.get('/:id', lootboxesController.show);
+lootboxesRouter.get('/:id/edit', lootboxesController.edit);
+lootboxesRouter.put('/:id', lootboxesController.update);
+lootboxesRouter.post('/', lootboxesController.create);
+lootboxesRouter.delete('/:id', lootboxesController.destroy);
 
 const matchesRouter = express.Router();
 matchesRouter.get('/', matchesController.index);

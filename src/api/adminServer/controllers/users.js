@@ -30,7 +30,9 @@ module.exports.update = async (request, response) => {
 
     user = await user.update({ $set: request.body });
 
-    response.json({ data: user });
+    const data = new UserSerializer(user).asJson();
+
+    response.json({ data });
   } catch (error) {
     response.status(error.status || 500).json({ error: error.message });
   }
