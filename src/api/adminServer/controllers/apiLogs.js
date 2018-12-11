@@ -1,15 +1,11 @@
 const ApiLog = require('../../../models/ApiLog');
+const ApiLogSerializer = require('../serializers/apiLog');
 const te = require('../../../util/throwErrorWithStatus');
 
 module.exports.index = async (request, response) => {
   const apiLogs = await ApiLog.find({}).sort('-createdAt');
-  const data = apiLogs.map(apiLog => ({
-    id: apiLog.id,
-    createdAt: apiLog.createdAt,
-    method: apiLog.method,
-    path: apiLog.path,
-    statusCode: apiLog.statusCode,
-  }));
+
+  const data = new ApiLogSerializer(apiLogs).asJson();
 
   response.json({ data });
 };
@@ -19,17 +15,7 @@ module.exports.show = async (request, response) => {
     const apiLog = await ApiLog.findById(request.params.id);
     if (!apiLog) te(`ApiLog with id ${request.params.id} not found`, 404);
 
-    const data = {
-      id: apiLog.id,
-      path: apiLog.path,
-      method: apiLog.method,
-      userSteamId: apiLog.userSteamId,
-      requestHeaders: JSON.parse(apiLog.requestHeaders),
-      requestBody: JSON.parse(apiLog.requestBody),
-      responseHeaders: JSON.parse(apiLog.responseHeaders),
-      responseBody: JSON.parse(apiLog.responseBody),
-      statusCode: apiLog.statusCode,
-    };
+    const data = new ApiLogSerializer(apiLog).asJson();
 
     response.json({ data });
   } catch (error) {
