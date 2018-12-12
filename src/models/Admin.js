@@ -10,6 +10,7 @@ const schema = new Schema({
     index: true,
     unique: true,
   },
+  email: String,
   password: String,
   encryptedPassword: String,
 });

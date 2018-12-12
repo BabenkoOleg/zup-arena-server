@@ -5,6 +5,7 @@ const authorizationController = require('./controllers/authorization');
 const lootboxesController = require('./controllers/lootboxes');
 const matchesController = require('./controllers/matches');
 const usersController = require('./controllers/users');
+const securityController = require('./controllers/security');
 
 const apiLogsRouter = express.Router();
 apiLogsRouter.get('/', apiLogsController.index);
@@ -31,6 +32,10 @@ usersRouter.get('/', usersController.index);
 usersRouter.get('/:id', usersController.show);
 usersRouter.put('/:id', usersController.update);
 
+const securityRouter = express.Router();
+securityRouter.get('/', securityController.edit);
+securityRouter.put('/', securityController.update);
+
 module.exports = [
   {
     path: '/api-logs',
@@ -51,5 +56,9 @@ module.exports = [
   {
     path: '/users',
     router: usersRouter,
+  },
+  {
+    path: '/security',
+    router: securityRouter,
   },
 ];
