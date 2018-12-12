@@ -28,7 +28,8 @@ module.exports.update = async (request, response) => {
     let user = await User.findOne({ steamId: request.params.id });
     if (!user) te(`User with steamId ${request.params.id} not found`, 404);
 
-    user = await user.update({ $set: request.body });
+    user.set(request.body);
+    user = await user.save();
 
     const data = new UserSerializer(user).asJson();
 

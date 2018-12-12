@@ -64,7 +64,8 @@ module.exports.update = async (request, response) => {
     let lootbox = await Lootbox.findById(request.params.id);
     if (!lootbox) te(`Lootbox with id ${request.params.id} not found`, 404);
 
-    lootbox = await lootbox.update({ $set: request.body });
+    lootbox.set(request.body);
+    lootbox = await lootbox.save();
 
     const data = new LootboxSerializer(lootbox).asJson();
 
